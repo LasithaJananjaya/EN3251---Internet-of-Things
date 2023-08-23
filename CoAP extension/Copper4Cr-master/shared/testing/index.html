@@ -1,0 +1,90 @@
+<!--
+/*******************************************************************************
+ * Copyright (c) 2016, Institute for Pervasive Computing, ETH Zurich.
+ * All rights reserved.
+ * 
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ * 1. Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in the
+ *    documentation and/or other materials provided with the distribution.
+ * 3. Neither the name of the Institute nor the names of its contributors
+ *    may be used to endorse or promote products derived from this software
+ *    without specific prior written permission.
+ * 
+ * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS "AS IS" AND
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+ * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+ * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+ * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+ * SUCH DAMAGE.
+ * 
+ * This file is part of the Copper (Cu) CoAP user-agent.
+ ****************************************************************************** -->
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>Copper Tests</title>
+  <link rel="stylesheet" href="qunit-1.22.0.css">
+</head>
+<body>
+  <!-- QUnit -->
+  <div id="qunit"></div>
+  <div id="qunit-fixture"></div>
+  <script src="qunit-1.22.0.js"></script>
+
+  <!-- Scripts under Test -->
+  <script src="../namespace.js"></script>
+  
+  <script src="../utils/CopperUtils.js"></script>
+  <script src="../utils/TimeUtils.js"></script>
+  <script src="../utils/StringUtils.js"></script>
+  <script src="../utils/ByteUtils.js"></script>
+  <script src="../utils/Settings.js"></script>
+  <script src="../utils/JsonUtils.js"></script>
+
+  <script src="../logging/Log.js"></script>
+  <script src="../logging/ConsoleLogger.js"></script>
+
+  <script src="../events/Event.js"></script>
+
+  <script src="../coap/Constants.js"></script>
+  <script src="../coap/CoapMessage.js"></script>
+  <script src="../coap/CoapMessageType.js"></script>
+  <script src="../coap/CoapMessageCode.js"></script>
+  <script src="../coap/CoapMessageOptionHeader.js"></script>
+  <script src="../coap/CoapMessageBlockOption.js"></script>
+  <script src="../coap/CoapMessageOption.js"></script>
+  <script src="../coap/CoapMessageContentFormat.js"></script>
+  <script src="../coap/CoapMessageSerializer.js"></script>
+
+  <script src="../endpoint/Port.js"></script>
+  
+  <!-- Tests -->
+  <script src="tests/TestUtils.js"></script>
+
+  <script src="tests/utils/TimeUtilsTest.js"></script>
+  <script src="tests/utils/StringUtilsTest.js"></script>
+  <script src="tests/utils/ByteUtilsTest.js"></script>
+  <script src="tests/utils/JsonUtilsTest.js"></script>
+  <script src="tests/utils/SettingsTest.js"></script>
+  <script src="tests/events/EventTest.js"></script>
+  <script src="tests/coap/CoapMessageTypeTest.js"></script>
+  <script src="tests/coap/CoapMessageCodeTest.js"></script>
+  <script src="tests/coap/CoapMessageOptionHeaderTest.js"></script>
+  <script src="tests/coap/CoapMessageBlockOptionTest.js"></script>
+  <script src="tests/coap/CoapMessageOptionTest.js"></script>
+  <script src="tests/coap/CoapMessageTest.js"></script>
+  <script src="tests/coap/CoapMessageSerializerTest.js"></script>
+</body>
+</html>

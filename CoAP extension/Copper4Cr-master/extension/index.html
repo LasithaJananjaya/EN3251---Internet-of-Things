@@ -1,0 +1,706 @@
+<!--
+/*******************************************************************************
+ * Copyright (c) 2016, Institute for Pervasive Computing, ETH Zurich.
+ * All rights reserved.
+ * 
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ * 1. Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in the
+ *    documentation and/or other materials provided with the distribution.
+ * 3. Neither the name of the Institute nor the names of its contributors
+ *    may be used to endorse or promote products derived from this software
+ *    without specific prior written permission.
+ * 
+ * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS "AS IS" AND
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+ * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+ * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+ * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+ * SUCH DAMAGE.
+ * 
+ * This file is part of the Copper (Cu) CoAP user-agent.
+ ****************************************************************************** -->
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8"/>
+	<meta name="viewport" content="width = device-width, initial-scale = 1">
+
+	<title>Copper</title>
+	
+	<link rel="stylesheet" type="text/css" href="css/reset.css"/>
+	<link rel="stylesheet" type="text/css" href="css/style.css"/>
+
+	<script src="shared/namespace.js"></script>
+	
+	<script src="shared/utils/CopperUtils.js"></script>
+	<script src="shared/utils/TimeUtils.js"></script>
+	<script src="shared/utils/StringUtils.js"></script>
+	<script src="shared/utils/ByteUtils.js"></script>
+	<script src="shared/utils/Settings.js"></script>
+	<script src="shared/utils/JsonUtils.js"></script>
+
+    <script src="shared/logging/Log.js"></script>
+    <script src="shared/logging/ConsoleLogger.js"></script>
+
+	<script src="shared/events/Event.js"></script>
+
+	<script src="shared/coap/Constants.js"></script>
+	<script src="shared/coap/CoapMessage.js"></script>
+	<script src="shared/coap/CoapMessageType.js"></script>
+	<script src="shared/coap/CoapMessageCode.js"></script>
+	<script src="shared/coap/CoapMessageOptionHeader.js"></script>
+	<script src="shared/coap/CoapMessageBlockOption.js"></script>
+	<script src="shared/coap/CoapMessageOption.js"></script>
+	<script src="shared/coap/CoapMessageContentFormat.js"></script>
+	<script src="shared/coap/CoapMessageSerializer.js"></script>
+
+	<script src="shared/endpoint/Port.js"></script>
+
+	<script src="utils/Storage.js"></script>
+	<script src="utils/StorageManager.js"></script>
+	<script src="utils/Options.js"></script>
+	<script src="utils/Payload.js"></script>
+	<script src="utils/Layout.js"></script>
+	<script src="utils/Profiles.js"></script>
+	<script src="utils/Resources.js"></script>
+	<script src="utils/ExtensionJsonUtils.js"></script>
+
+	<script src="gui/Resizer.js"></script>
+	<script src="gui/MessageLogAdapter.js"></script>
+	<script src="gui/PacketHeaderAdapter.js"></script>
+	<script src="gui/PacketOptionsAdapter.js"></script>
+	<script src="gui/PayloadAdapter.js"></script>
+	<script src="gui/ToolbarAdapter.js"></script>
+	<script src="gui/ResourceViewAdapter.js"></script>
+	<script src="gui/PreferenceWindowAdapter.js"></script>
+	<script src="gui/DebugOptionsAdapter.js"></script>
+	<script src="gui/ProfilesAdapter.js"></script>
+	<script src="gui/StartupWindowAdapter.js"></script>
+	<script src="gui/StatusBarAdapter.js"></script>
+	<script src="gui/PopupWindowAdapter.js"></script>
+	<script src="gui/ToolbarLoggerAdapter.js"></script>
+
+	<script src="endpoint/CoapResourceHandler.js"></script>
+	<script src="endpoint/ClientEndpoint.js"></script>
+	<script src="endpoint/ClientPort.js"></script>
+
+	<script src="Session.js"></script>
+
+	<!-- Chrome Specific Overloads -->
+	<script src="shared/endpoint/PortChrome.js"></script>
+	<script src="utils/StorageChrome.js"></script>
+	<script src="endpoint/CoapResourceHandlerChrome.js"></script>
+	<script src="endpoint/ClientPortChrome.js"></script>
+
+</head>
+<body>
+<div class="main-container">
+	<div class="main-toolbar hbox">
+		<div class="toolbar-item border-right">
+			<button id="copper-toolbar-ping" type="button" title="Ping with empty message">
+					<img src="skin/tool_ping.png"> Ping
+			</button>
+			<button id="copper-toolbar-discover" type="button" title="GET link-formats from the well-known URI (cached resources are displayed in red)">
+	            <img src="skin/tool_discover.png"> Discover
+			</button>
+		</div>
+		
+		<div class="toolbar-item border-right">
+			<button id="copper-toolbar-get" type="button">
+				<img src="skin/tool_get.png"> GET
+			</button>
+			<button id="copper-toolbar-post" type="button">
+				<img src="skin/tool_post.png"> POST
+			</button>
+			<button id="copper-toolbar-put" type="button">
+				<img src="skin/tool_put.png"> PUT
+			</button>
+			<button id="copper-toolbar-delete" type="button">
+				<img src="skin/tool_delete.png"> DELETE
+			</button>
+			<button id="copper-toolbar-fetch" type="button" title="Safe request with payload (e.g., complex query in payload with content format">
+				<img src="skin/tool_fetch.png"> FETCH
+			</button>
+			<button id="copper-toolbar-patch" type="button" title="Patch intents a well-defined partial modification of the resource (opposed to unpredictable POST)">
+				<img src="skin/tool_patch.png"> PATCH
+			</button>
+			<button id="copper-toolbar-ipatch" type="button" title="Idempotent patch">
+				<img src="skin/tool_ipatch.png"> iPATCH
+			</button>
+			<button id="copper-toolbar-observe" type="button" title="Observing resources (RFC 7641)"
+				><img src="skin/tool_observe.png"> Observe
+				<!-- must keep > of button directly before <img to make it first child for programmatic access -->
+			</button>
+		</div>
+		
+		<div class="toolbar-item-dropdown hbox">
+            <div id="copper-toolbar-payload">
+                <button class="copper-toolbar-dropdown-button" type="button">
+					<p>Payload ▾</p>
+                </button>
+
+                <div class="dropdown-content vbox hidden">
+                    <ul class="select-group vbox">
+                        <li id="copper-toolbar-payload-mode-text" class="dropdown-item hbox">
+                            <div class="selection-icon hidden">
+                                <span>&#8226;</span>
+                            </div>
+                            <p>Text</p>
+                        </li>
+                        <li id="copper-toolbar-payload-mode-file" class="dropdown-item hbox">
+                            <div class="selection-icon hidden">
+                                <span>&#8226;</span>
+                            </div>
+                            <p>File</p>
+                        </li>
+                    </ul>
+					<div class="separation-line"></div>
+                    <ul class="vbox">
+                        <li id="copper-toolbar-payload-choose-file" class="dropdown-item hbox">
+                            <div class="selection-icon hidden">
+                                <span>&#8203;</span>
+                            </div>
+                            <p>Choose File...</p>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="toolbar-item-dropdown hbox">
+            <div id="copper-toolbar-behavior">
+                <button class="copper-toolbar-dropdown-button" type="button">
+					<p>Behavior ▾</p>
+			    </button>
+
+                <div class="dropdown-content vbox hidden">
+                    <ul class="select-group vbox">
+                        <li id="copper-toolbar-behavior-request-con" class="dropdown-item hbox">
+                            <div class="selection-icon hidden">
+                                <span>&#8226;</span>
+                            </div>
+                            <p>CON requests</p>
+                        </li>
+                        <li id="copper-toolbar-behavior-request-non" class="dropdown-item hbox">
+                            <div class="selection-icon hidden">
+                                <span>&#8226;</span>
+                            </div>
+                            <p>NON requests</p>
+                        </li>
+                    </ul>
+
+					<div class="separation-line"></div>
+
+                    <ul class="single-element vbox">
+                        <li id="copper-toolbar-behavior-retransmissions" class="dropdown-item hbox" title="Retransmit unconfirmed messages">
+                            <div class="selection-icon hidden">
+                                <span>&#10003;</span>
+                            </div>
+                            <p>Retransmissions</p>
+                        </li>
+                    </ul>
+                    <ul class="single-element vbox">
+                        <li id="copper-toolbar-behavior-duplicates" class="dropdown-item hbox" title="Do not increase MID">
+                            <div class="selection-icon hidden">
+                                <span>&#10003;</span>
+                            </div>
+                            <p>Send Duplicates</p>
+                        </li>
+                    </ul>
+
+					<div class="separation-line"></div>
+
+					<ul class="single-element vbox">
+						<li id="copper-toolbar-behavior-display-unknown" class="dropdown-item hbox" title="Display messages with unknown tokens">
+							<div class="selection-icon hidden">
+								<span>&#10003;</span>
+							</div>
+							<p>Display unknown</p>
+						</li>
+					</ul>
+					<ul class="single-element vbox">
+						<li id="copper-toolbar-behavior-reject-unknown" class="dropdown-item hbox" title="Send a Reset for messages with unknown tokens">
+							<div class="selection-icon hidden">
+								<span>&#10003;</span>
+							</div>
+							<p>Reject unknown</p>
+						</li>
+					</ul>
+
+					<div class="separation-line"></div>
+
+					<ul class="single-element vbox">
+						<li id="copper-toolbar-behavior-send-uri-host" class="dropdown-item hbox" title="Enable virtual hosts and send Uri-Host option">
+							<div class="selection-icon hidden">
+								<span>&#10003;</span>
+							</div>
+							<p>Send Uri-Host</p>
+						</li>
+					</ul>
+					<ul class="single-element vbox">
+						<li id="copper-toolbar-behavior-send-size1" class="dropdown-item hbox" title="Automatically indicate request representation size">
+							<div class="selection-icon hidden">
+								<span>&#10003;</span>
+							</div>
+							<p>Send auto Size1</p>
+						</li>
+					</ul>
+					<ul class="single-element vbox">
+						<li id="copper-toolbar-behavior-send-content-type" class="dropdown-item hbox" title="Send content type if known">
+							<div class="selection-icon hidden">
+								<span>&#10003;</span>
+							</div>
+							<p>Send Content-Type</p>
+						</li>
+					</ul>
+
+
+                    <div class="separation-line"></div>
+
+                    <ul class="select-group vbox">
+                        <li id="copper-toolbar-behavior-block-size-0" class="dropdown-item hbox">
+                            <div class="selection-icon hidden">
+                                <span>&#8226;</span>
+                            </div>
+                            <p>Block late negotiation</p>
+                        </li>
+                        <li id="copper-toolbar-behavior-block-size-16" class="dropdown-item hbox">
+                            <div class="selection-icon hidden">
+                                <span>&#8226;</span>
+                            </div>
+                            <p>Block size 16</p>
+                        </li>
+                        <li id="copper-toolbar-behavior-block-size-32" class="dropdown-item hbox">
+                            <div class="selection-icon hidden">
+                                <span>&#8226;</span>
+                            </div>
+                            <p>Block size 32</p>
+                        </li>
+                        <li id="copper-toolbar-behavior-block-size-64" class="dropdown-item hbox">
+                            <div class="selection-icon hidden">
+                                <span>&#8226;</span>
+                            </div>
+                            <p>Block size 64</p>
+                        </li>
+                        <li id="copper-toolbar-behavior-block-size-128" class="dropdown-item hbox">
+                            <div class="selection-icon hidden">
+                                <span>&#8226;</span>
+                            </div>
+                            <p>Block size 128</p>
+                        </li>
+                        <li id="copper-toolbar-behavior-block-size-256" class="dropdown-item hbox">
+                            <div class="selection-icon hidden">
+                                <span>&#8226;</span>
+                            </div>
+                            <p>Block size 256</p>
+                        </li>
+                        <li id="copper-toolbar-behavior-block-size-512" class="dropdown-item hbox">
+                            <div class="selection-icon hidden">
+                                <span>&#8226;</span>
+                            </div>
+                            <p>Block size 512</p>
+                        </li>
+                        <li id="copper-toolbar-behavior-block-size-1024" class="dropdown-item hbox">
+                            <div class="selection-icon hidden">
+                                <span>&#8226;</span>
+                            </div>
+                            <p>Block size 1024</p>
+                        </li>
+                    </ul>
+
+                    <div class="separation-line"></div>
+
+                    <ul class="single-element vbox">
+                        <li id="copper-toolbar-behavior-token-observe" class="dropdown-item hbox" title="Enforce non-default Token option for observing">
+                            <div class="selection-icon hidden">
+                                <span>&#10003;</span>
+                            </div>
+                            <p>Observe Token</p>
+                        </li>
+                    </ul>
+
+                    <div class="separation-line"></div>
+
+                    <ul class="select-group vbox">
+                        <li id="copper-toolbar-behavior-observe-lazy" class="dropdown-item hbox" title="Only remove subscription, send lazy RST later (can be used for MID matching at server)">
+                            <div class="selection-icon hidden">
+                                <span>&#8226;</span>
+                            </div>
+                            <p>Lazy Observe cancel</p>
+                        </li>
+                        <li id="copper-toolbar-behavior-observe-get" class="dropdown-item hbox" title="Send a GET without Observe option to notify server">
+                            <div class="selection-icon hidden">
+                                <span>&#8226;</span>
+                            </div>
+                            <p>GET Observe cancel</p>
+                        </li>
+                        <li id="copper-toolbar-behavior-observe-rst" class="dropdown-item hbox" title="Send a RST right away (does not work with MID matching as new MID is used)">
+                            <div class="selection-icon hidden">
+                                <span>&#8226;</span>
+                            </div>
+                            <p>RST Observe cancel</p>
+                        </li>
+                    </ul>
+
+				</div>
+            </div>
+		</div>
+
+		<div class="toolbar-item-dropdown hbox">
+			<div id="copper-toolbar-profiles">
+				<button class="copper-toolbar-dropdown-button" type="button">
+					<p>Profiles ▾</p>
+				</button>
+
+				<div class="dropdown-content hbox hidden">
+					<div class="vbox flex-filler" style="width: 160px;">
+						<ul id="copper-toolbar-profiles-container" class="select-group vbox"></ul>
+						<div class="separation-line"></div>
+						<ul class="single-element vbox">
+							<li id="copper-toolbar-profiles-auto-store" class="dropdown-item hbox" title="Automatically store changes made to the currently selected profile">
+								<div class="selection-icon hidden">
+									<span>&#10003;</span>
+								</div>
+								<p>Auto store to Profile</p>
+							</li>
+						</ul>
+						<ul class="vbox">
+							<li id="copper-toolbar-profiles-store-current" class="dropdown-item hbox" title="Store changes made to the currently selected profile">
+								<div class="selection-icon hidden">
+									<span>&#8203;</span>
+								</div>
+								<p class="close-dropdown-on-click">Store to current Profile</p>
+							</li>
+						</ul>
+						<div class="separation-line"></div>
+						<ul class="vbox">
+							<li id="copper-toolbar-profiles-manage" class="dropdown-item hbox">
+								<div class="selection-icon hidden">
+									<span>&#8203;</span>
+								</div>
+								<p class="close-dropdown-on-click">Manage Profiles...</p>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="flex-filler"></div>
+
+		<div style="display: flex; cursor: pointer;">
+			<div id="copper-toolbar-log">
+				<span id="copper-toolbar-log-event-symbol" style="font-size: 350%">&#x25A1</span>
+				<div id="copper-toolbar-log-event-container" class="hidden">
+					<div style="overflow-y: auto; max-height: 100%; max-width: 100%;">
+						<div id="copper-toolbar-log-event-log"></div>
+					</div>
+				</div>
+			</div>
+
+			<div id="copper-toolbar-preferences">
+				<span style="font-size: 250%">≡</span>
+			</div>
+		</div>
+	</div>
+
+  <!-- MENU BAR DONE -->
+
+	<div class="main-content vbox">
+		<div class="hbox flex-filler" style="overflow: hidden;">
+			<div class="vbox flex-filler">
+				<div class="main-content-top-box">
+					<fieldset>
+						<legend>Status</legend>
+						<div class="hbox"><label id="status-label" class="flex-filler"></label></div>
+					</fieldset>
+				</div>
+				<div class="hbox flex-filler">
+					<div class="container-for-collapser" style="position: relative; min-width: 4px; height: 100%;">
+						<div class="sidebar-left hbox" style="height: 100%;">
+							<div id="copper-resource-tree" class="tree border_solid white flex-filler"></div>
+						</div>
+					</div>
+					
+					<div class="vbox flex-filler" style="min-width: 380px;">
+						<div class="hbox center-box-top">
+							<div id="copper-packet-header" class="table no-scroll">
+								<div class="table-head">
+									<span class="packet-header-element">Header</span>
+									<span class="packet-header-value">Value</span>
+								</div>
+								<div class="table-body">
+									<div class="table-body-row">
+										<span class="packet-header-element">Type</span>
+										<span id="copper-packet-header-type" class="packet-header-value"></span>
+									</div>
+									<div class="table-body-row">
+										<span class="packet-header-element">Code</span>
+										<span id="copper-packet-header-code" class="packet-header-value"></span>
+									</div>
+									<div class="table-body-row">
+										<span class="packet-header-element">MID</span>
+										<span id="copper-packet-header-mid" class="packet-header-value"></span>
+									</div>
+									<div class="table-body-row">
+										<span class="packet-header-element">Token</span>
+										<span id="copper-packet-header-token" class="packet-header-value"></span>
+									</div>
+								</div>
+							</div>
+							<div id="copper-packet-options" class="table">
+								<div class="table-head">
+									<span class="packet-option">
+										Option
+									</span><span class="packet-value">
+										Value
+									</span><span class="packet-raw">
+										Raw
+									</span>
+								</div>
+								<div class="table-head-scrollbar"></div>
+								<div id="copper-packet-options-table" class="table-body">
+								</div>
+							</div>
+						</div>
+						<div class="center-box-bottom flex-filler">
+							<h2>Payload</h2>
+							<button id="copper-payload-btn-in" class="selected" type="button">
+								<img src="skin/payload_in.png"> Incoming
+							</button>
+							<button id="copper-payload-btn-rendered" type="button">
+								<img src="skin/payload_rendered.png"> Rendered
+							</button>
+							<button id="copper-payload-btn-out" type="button">
+								<img src="skin/payload_out.png"> Outgoing
+							</button>
+							<div class="pane white">
+								<div id="copper-payload-tab-in" class="innerpane visible"></div>
+								<div id="copper-payload-tab-rendered" class="innerpane hidden"></div>
+								<textarea id="copper-payload-tab-out" class="innerpane hidden"></textarea>
+							</div>
+						</div>
+					</div>
+				
+				</div>
+			
+			</div>
+			<div class="container-for-collapser" style="position: relative; min-width: 4px;">
+				<div id="copper-debug-options" class="sidebar-right vbox" style="height: 100%; overflow-y: auto;">
+
+					<div style="padding: 0px 10px 0px 10px; min-height: 35px; height: 35px;">
+						<div>
+							<span id="copper-debug-options-enabled"></span>
+							<button id="copper-debug-options-reset">Reset</button>
+						</div>
+					</div>
+
+					<div style="display: block; padding: 0 4px 0 10px;">
+						<div style="padding: 4px;">
+							<div style="text-align: center;"><label>Token</label></div>
+							<div id="copper-debug-options-token" class="flex vbox"></div>
+
+							<div style="text-align: center;"><label style="padding-top: 2px; margin-bottom: 2px;">Request Options</label></div>
+							<p>Accept</p>
+							<div id="copper-debug-options-accept" class="flex vbox dropdown"></div>
+
+							<p>Content-Format</p>
+							<div id="copper-debug-options-content-format" class="flex vbox dropdown"></div>
+
+							<div id="copper-debug-options-block-options" class="hbox">
+								<div class="vbox" style="flex: 3; margin-left: 0;">
+									<p>Block1 (Req.)</p>
+									<div id="copper-debug-options-block1" class="flex vbox"></div>
+									<p>Size1</p>
+									<div id="copper-debug-options-size1" class="flex vbox"></div>
+								</div>
+
+								<div class="vbox" style="flex: 3;">
+									<p>Block2 (Res.)</p>
+									<div id="copper-debug-options-block2" class="flex vbox"></div>
+									<p>Size2</p>
+									<div id="copper-debug-options-size2" class="flex vbox"></div>
+								</div>
+
+								<div id="copper-debug-options-blockwise-enabled" class="flex vbox"></div>
+							</div>
+
+							<p>Observe</p>
+							<div id="copper-debug-options-observe" class="flex vbox"></div>
+
+							<p>ETag(s)</p>
+							<div id="copper-debug-options-etags" class="flex vbox"></div>
+
+							<p>If-Match(s)</p>
+							<div id="copper-debug-options-ifmatches" class="flex vbox"></div>
+
+							<div id="copper-debug-options-if-none-match"></div>
+
+							<div class="hbox">
+								<div class="flex">
+									<p>Uri-Host</p>
+									<div id="copper-debug-options-uri-host" class="vbox"></div>
+								</div>
+
+								<div style="margin-left: 6px; width: 4em;">
+									<p>Uri-Port</p>
+									<div id="copper-debug-options-uri-port" class="vbox"></div>
+								</div>
+							</div>
+
+							<p>Proxy-Uri</p>
+							<div id="copper-debug-options-proxy-uri" class="flex vbox"></div>
+
+							<div id="copper-debug-options-proxy-scheme"></div>
+
+							<div style="text-align: center;"><label>Response Options</label></div>
+
+							<p>Max-Age</p>
+							<div id="copper-debug-options-max-age" class="flex vbox"></div>
+
+							<p>Location-Path</p>
+							<div id="copper-debug-options-location-path" class="flex vbox"></div>
+
+							<p>Location-Query</p>
+							<div id="copper-debug-options-location-query" class="flex vbox"></div>
+
+							<div style="text-align: center;"><label>Custom Options</label></div>
+
+							<div class="vbox">
+								<div class="hbox">
+									<div style="flex: 1;">
+										<p>Number</p>
+									</div>
+									<div style="margin-left: 6px; flex: 2;">
+										<p>Value</p>
+									</div>
+								</div>
+								<div class="vbox" id="copper-debug-options-custom-options"></div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="container-for-collapser" style="position: relative;">
+			<div class="main-content-bottom-box">
+				<h2>CoAP Message Log</h2>
+				<div id="copper-coap-message-log" class="table vbox">
+					<div class="table-head">
+						<span class="coap-message-time">Time</span>
+						<span class="coap-message-type">Type</span>
+						<span class="coap-message-code">Code</span>
+						<span class="coap-message-mid">MID</span>
+						<span class="coap-message-token">Token</span>
+						<span class="coap-message-options">Options</span>
+						<span class="coap-message-payload">Payload</span>
+					</div>
+					<div class="table-head-scrollbar"></div>
+					<div id="copper-coap-message-log-table" class="table-body"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div id="popup-windows">
+
+	<!-- Option window -->
+	<div class="block_screen hidden">
+		<div id="preferences-window" class="popup-container vbox">
+			<label class="title">Copper (Cu) Preferences</label>
+
+			<div class="vbox content">	
+				<div class="checkbox">
+					<label><input id="preferences-window-encode-utf-8" type="checkbox">
+						Use UTF-8 encoding</label>
+				</div>
+				<button id="preferences-window-reset-behavior">Reset behavior</button>
+				<button id="preferences-window-reset-payload">Reset payload</button>
+				<button id="preferences-window-reset-layout">Reset layout</button>
+				<button id="preferences-window-clear-profiles-cache">Clear profile cache</button>
+				<button id="preferences-window-clear-resource-cache">Clear resource cache</button>
+			<button class="close-button">OK</button>
+			</div>
+		</div>
+	</div>
+
+	<!-- Profiles window -->
+	<div class="block_screen hidden">
+		<div id="manage-profile-window" class="popup-container vbox">
+			<label class="title">Manage Profiles</label>
+
+			<div class="vbox content">
+				<fieldset id="copper-profile-manager-container">
+					<legend>Profiles</legend>
+
+					<button id="copper-profile-manager-add-profile">Add Profile with current Settings</button>
+				</fieldset>
+
+				<div class="checkbox" style="margin-bottom: 6px">
+					<label><input id="copper-profile-manager-load-newest-profile" type="checkbox">
+						Load newest created profile (if any)</label>
+				</div>
+
+				<div class="hbox">
+					<button id="copper-profile-manage-save-and-exit">Save and Exit</button>
+					<button title="Close and do not save any changes to the profiles" id="copper-profile-manager-cancel">Cancel</button>
+				</div>
+
+			</div>
+		</div>
+	</div>
+
+	<!-- overlay startup -->
+	<div class="block_screen start-resource-access hidden">
+		<div id="copper-overlay-startup" class="popup-container vbox">
+			<label class="title">Copper (Cu) - Start</label>
+			<div class="hbox" style="padding: 40px 0px 10px 0px; margin-left: -30px;">
+				<div>
+					<img src="skin/Cu_box_256.png">;
+				</div>
+				<div style="margin: 0px 20px 0px 10px; width: 260px;">
+					<h1>Resource Access</h1>
+					<label style="margin-bottom: 5px;">Enter the URL of a CoAP Endpoint:</label>
+					<div class="input-box hbox" style="margin-bottom: 20px;">
+						<input id="copper-startup-resource-input" class="flex" type="text">
+						<button id="copper-startup-resource-confirm-button">Enter</button>
+					</div>
+					<p>Use the
+						<img src="skin/tool_discover.png" align="middle" /> Discover
+						button to retrieve the list of available resources
+						from /.well-known/core.<br><br>
+						It is useful to first <img src="skin/tool_ping.png" align="center" /> Ping
+						the server to see if the remote endpoint responds to CoAP.<br><br>
+						You can try with <label style="cursor: text;">coap://californium.eclipseprojects.io/</label>
+					</p>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="block_screen copper-error hidden">
+		<div id="copper-overlay-error" class="popup-container vbox">
+			<label id="copper-overlay-error-title" class="title"></label>
+			<div class="hbox" style="padding: 30px 30px 20px 30px;">
+				<div>
+					<img id="copper-overlay-icon" src="">
+				</div>
+				<p id="copper-error-msg">
+				</p>
+			</div>
+		</div>
+	</div>
+</div>
+</body>
+</html>

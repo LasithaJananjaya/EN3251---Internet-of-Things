@@ -1,0 +1,104 @@
+/*******************************************************************************
+ * Copyright (c) 2016, Institute for Pervasive Computing, ETH Zurich.
+ * All rights reserved.
+ * 
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ * 1. Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in the
+ *    documentation and/or other materials provided with the distribution.
+ * 3. Neither the name of the Institute nor the names of its contributors
+ *    may be used to endorse or promote products derived from this software
+ *    without specific prior written permission.
+ * 
+ * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS "AS IS" AND
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+ * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+ * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+ * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+ * SUCH DAMAGE.
+ * 
+ * This file is part of the Copper (Cu) CoAP user-agent.
+ ******************************************************************************/
+{
+"update_url": "https://clients2.google.com/service/update2/crx",
+
+  "name": "Copper (Cu4Cr) Application",
+  "manifest_version": 2,
+  "version": "0.1.0",
+  "description": "Copper (Cu4Cr) CoAP user-agent for Chrome",
+  "icons": {
+    "16":  "resources/Cu_16.png",
+    "24":  "resources/Cu_24.png",
+    "32":  "resources/Cu_32.png",
+    "48":  "resources/Cu_48.png",
+    "128": "resources/Cu_64.png"
+  },
+
+  "app":{
+      "background": {
+        "scripts": [ // shared part
+                     "shared/namespace.js",
+
+                     "shared/utils/CopperUtils.js",
+                     "shared/utils/TimeUtils.js",
+                     "shared/utils/StringUtils.js",
+                     "shared/utils/ByteUtils.js",
+                     "shared/utils/Settings.js",
+                     "shared/utils/JsonUtils.js",
+
+                     "shared/logging/Log.js",
+                     "shared/logging/ConsoleLogger.js",
+
+                     "shared/events/Event.js",
+
+                     "shared/coap/Constants.js",
+                     "shared/coap/CoapMessage.js",
+                     "shared/coap/CoapMessageType.js", 
+                     "shared/coap/CoapMessageCode.js", 
+                     "shared/coap/CoapMessageOptionHeader.js",
+                     "shared/coap/CoapMessageBlockOption.js",
+                     "shared/coap/CoapMessageOption.js",
+                     "shared/coap/CoapMessageContentFormat.js",
+                     "shared/coap/CoapMessageSerializer.js",
+
+                     "shared/endpoint/Port.js",
+                     
+                     //server part
+                     "endpoint/request/receiver/BlockwiseReceiver.js",
+                     "endpoint/request/receiver/SingleReceiver.js",
+                     "endpoint/request/sender/BlockwiseSender.js",
+                     "endpoint/request/sender/ObserveSender.js",
+                     "endpoint/request/SingleRequestHandler.js",
+
+                     "endpoint/transmission/RequestMessageTransmission.js",
+                     "endpoint/transmission/ResponseMessageTransmission.js",
+                     "endpoint/transmission/MessagesInTransmissionSet.js",
+                     "endpoint/transmission/TransmissionHandler.js",
+                     "endpoint/UdpClient.js",
+                     "endpoint/ServerEndpoint.js",
+
+                     "background.js",
+
+                     // Chrome Specific Overloads
+                     "endpoint/UdpClientChrome.js",
+                     "shared/endpoint/PortChrome.js"
+                    ]
+      }
+  },
+    
+  "sockets": {
+    "udp": {
+      "send": ["*"],
+      "bind": ["*"]
+    }
+  }
+}
