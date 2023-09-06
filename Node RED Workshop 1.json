@@ -1,0 +1,478 @@
+[
+    {
+        "id": "a9d3fc35d8aa5683",
+        "type": "tab",
+        "label": "Node-RED Workshop 1",
+        "disabled": true,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "ac1cd09b990aa65d",
+        "type": "inject",
+        "z": "a9d3fc35d8aa5683",
+        "name": "Fabric Producer",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "rawFabric",
+        "payloadType": "str",
+        "x": 160,
+        "y": 200,
+        "wires": [
+            [
+                "41618fb9c3532c46",
+                "2428aae2174205c7"
+            ]
+        ]
+    },
+    {
+        "id": "e16e954ee2c4c16d",
+        "type": "debug",
+        "z": "a9d3fc35d8aa5683",
+        "name": "debug 4",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1220,
+        "y": 120,
+        "wires": []
+    },
+    {
+        "id": "475535f0cead3227",
+        "type": "function",
+        "z": "a9d3fc35d8aa5683",
+        "name": "Cutting",
+        "func": "if(msg.payload === 'rawFabric'){\n    msg.payload = 'cutPieces';\n}\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 500,
+        "y": 200,
+        "wires": [
+            [
+                "e33ba6ee08564e9d",
+                "083e64e2a9e3e04f"
+            ]
+        ]
+    },
+    {
+        "id": "41618fb9c3532c46",
+        "type": "debug",
+        "z": "a9d3fc35d8aa5683",
+        "name": "debug 1",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 240,
+        "y": 120,
+        "wires": []
+    },
+    {
+        "id": "2255631c18f03da4",
+        "type": "function",
+        "z": "a9d3fc35d8aa5683",
+        "name": "Sewing",
+        "func": "if (msg.payload === 'cutPieces'){\n    msg.payload = 'sewedShirt';\n}\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 820,
+        "y": 200,
+        "wires": [
+            [
+                "e9081d9c06c873c8",
+                "d1cfede48da52c91"
+            ]
+        ]
+    },
+    {
+        "id": "4fa5f8927b568889",
+        "type": "function",
+        "z": "a9d3fc35d8aa5683",
+        "name": "Finishing",
+        "func": "if (msg.payload === 'sewedShirt'){\n    msg.payload = 'finalProduct';\n}\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1120,
+        "y": 200,
+        "wires": [
+            [
+                "e16e954ee2c4c16d"
+            ]
+        ]
+    },
+    {
+        "id": "e33ba6ee08564e9d",
+        "type": "debug",
+        "z": "a9d3fc35d8aa5683",
+        "name": "debug 2",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 580,
+        "y": 120,
+        "wires": []
+    },
+    {
+        "id": "e9081d9c06c873c8",
+        "type": "debug",
+        "z": "a9d3fc35d8aa5683",
+        "name": "debug 3",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 920,
+        "y": 120,
+        "wires": []
+    },
+    {
+        "id": "2428aae2174205c7",
+        "type": "delay",
+        "z": "a9d3fc35d8aa5683",
+        "name": "",
+        "pauseType": "delay",
+        "timeout": "5",
+        "timeoutUnits": "seconds",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "allowrate": false,
+        "outputs": 1,
+        "x": 340,
+        "y": 200,
+        "wires": [
+            [
+                "475535f0cead3227"
+            ]
+        ]
+    },
+    {
+        "id": "083e64e2a9e3e04f",
+        "type": "delay",
+        "z": "a9d3fc35d8aa5683",
+        "name": "",
+        "pauseType": "delay",
+        "timeout": "5",
+        "timeoutUnits": "seconds",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "allowrate": false,
+        "outputs": 1,
+        "x": 660,
+        "y": 200,
+        "wires": [
+            [
+                "2255631c18f03da4"
+            ]
+        ]
+    },
+    {
+        "id": "d1cfede48da52c91",
+        "type": "delay",
+        "z": "a9d3fc35d8aa5683",
+        "name": "",
+        "pauseType": "delay",
+        "timeout": "5",
+        "timeoutUnits": "seconds",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "allowrate": false,
+        "outputs": 1,
+        "x": 980,
+        "y": 200,
+        "wires": [
+            [
+                "4fa5f8927b568889"
+            ]
+        ]
+    },
+    {
+        "id": "209cd9ee504fadb3",
+        "type": "random",
+        "z": "a9d3fc35d8aa5683",
+        "name": "Random Number Generator",
+        "low": "37",
+        "high": "39",
+        "inte": "false",
+        "property": "payload",
+        "x": 380,
+        "y": 280,
+        "wires": [
+            [
+                "b3744dc9623e5e88"
+            ]
+        ]
+    },
+    {
+        "id": "f5cb4c4d20002c23",
+        "type": "inject",
+        "z": "a9d3fc35d8aa5683",
+        "name": "Trigger",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "0.5",
+        "crontab": "",
+        "once": false,
+        "onceDelay": "5",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 140,
+        "y": 280,
+        "wires": [
+            [
+                "209cd9ee504fadb3"
+            ]
+        ]
+    },
+    {
+        "id": "ce72beadc16284ab",
+        "type": "debug",
+        "z": "a9d3fc35d8aa5683",
+        "name": "debug 5",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 880,
+        "y": 280,
+        "wires": []
+    },
+    {
+        "id": "240dd54fb092b901",
+        "type": "ui_chart",
+        "z": "a9d3fc35d8aa5683",
+        "name": "",
+        "group": "41c1b3542038033e",
+        "order": 3,
+        "width": 10,
+        "height": 5,
+        "label": "chart",
+        "chartType": "line",
+        "legend": "false",
+        "xformat": "HH:mm:ss",
+        "interpolate": "linear",
+        "nodata": "",
+        "dot": false,
+        "ymin": "",
+        "ymax": "",
+        "removeOlder": 1,
+        "removeOlderPoints": "",
+        "removeOlderUnit": "60",
+        "cutout": 0,
+        "useOneColor": false,
+        "useUTC": false,
+        "colors": [
+            "#1f77b4",
+            "#9bbfee",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "outputs": 1,
+        "useDifferentColor": false,
+        "className": "",
+        "x": 850,
+        "y": 520,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "c2717d8b9ab9dccd",
+        "type": "ui_gauge",
+        "z": "a9d3fc35d8aa5683",
+        "name": "",
+        "group": "41c1b3542038033e",
+        "order": 4,
+        "width": 6,
+        "height": 5,
+        "gtype": "gage",
+        "title": "gauge",
+        "label": "units",
+        "format": "{{value}}",
+        "min": "37",
+        "max": "39",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "diff": false,
+        "className": "",
+        "x": 850,
+        "y": 460,
+        "wires": []
+    },
+    {
+        "id": "b3744dc9623e5e88",
+        "type": "function",
+        "z": "a9d3fc35d8aa5683",
+        "name": "function 1",
+        "func": "msg.payload = msg.payload.toFixed(2);\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 660,
+        "y": 280,
+        "wires": [
+            [
+                "ce72beadc16284ab",
+                "f957631071427fe6"
+            ]
+        ]
+    },
+    {
+        "id": "dba64d317a3d6f1c",
+        "type": "ui_text",
+        "z": "a9d3fc35d8aa5683",
+        "group": "41c1b3542038033e",
+        "order": 1,
+        "width": 9,
+        "height": 1,
+        "name": "",
+        "label": "Generated Random Number",
+        "format": "{{msg.payload}} C",
+        "layout": "row-spread",
+        "className": "",
+        "style": true,
+        "font": "Courier,monospace",
+        "fontSize": 16,
+        "color": "#917df2",
+        "x": 920,
+        "y": 400,
+        "wires": []
+    },
+    {
+        "id": "f957631071427fe6",
+        "type": "link out",
+        "z": "a9d3fc35d8aa5683",
+        "name": "link out 1",
+        "mode": "link",
+        "links": [
+            "446a4e97b355126f"
+        ],
+        "x": 755,
+        "y": 320,
+        "wires": []
+    },
+    {
+        "id": "446a4e97b355126f",
+        "type": "link in",
+        "z": "a9d3fc35d8aa5683",
+        "name": "link in 1",
+        "links": [
+            "f957631071427fe6"
+        ],
+        "x": 655,
+        "y": 460,
+        "wires": [
+            [
+                "dba64d317a3d6f1c",
+                "c2717d8b9ab9dccd",
+                "240dd54fb092b901"
+            ]
+        ]
+    },
+    {
+        "id": "4921a428d8a29ab1",
+        "type": "ui_spacer",
+        "z": "a9d3fc35d8aa5683",
+        "name": "spacer",
+        "group": "41c1b3542038033e",
+        "order": 2,
+        "width": 7,
+        "height": 1
+    },
+    {
+        "id": "41c1b3542038033e",
+        "type": "ui_group",
+        "name": "Random",
+        "tab": "eeace67e9f907bc0",
+        "order": 1,
+        "disp": true,
+        "width": 16,
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "eeace67e9f907bc0",
+        "type": "ui_tab",
+        "name": "Random Generator",
+        "icon": "Random",
+        "disabled": false,
+        "hidden": false
+    }
+]
