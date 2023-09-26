@@ -11,8 +11,8 @@ String data_out;
 
 #define PERIOD 5000
 
-const char *SSID = "AndroidAPF80D";               // SSID of your WiFi
-const char *PASSWORD = "ptmp2405"; //"206fde266242";       // Password of your WiFi
+const char *SSID = "Pixel 6a";               // SSID of your WiFi
+const char *PASSWORD = "pixelmcr6a"; //"206fde266242";       // Password of your WiFi
 const char *mqqttBroker = "test.mosquitto.org";  // alternate hosts: test.mosquitto.or, broker.hivemq.com
 const int mqttPort = 1883;
 const char *mqttClientID = "200650U";  // CHANGE THIS acording to your group number
