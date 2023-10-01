@@ -1,0 +1,1278 @@
+[
+    {
+        "id": "eabd8c0f450766e3",
+        "type": "tab",
+        "label": "Lab_assesment_1",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "a42be94d7f072361",
+        "type": "group",
+        "z": "eabd8c0f450766e3",
+        "style": {
+            "stroke": "#999999",
+            "stroke-opacity": "1",
+            "fill": "none",
+            "fill-opacity": "1",
+            "label": true,
+            "label-position": "nw",
+            "color": "#a4a4a4"
+        },
+        "nodes": [
+            "5e1a37f341c103c5",
+            "297335388a29be14",
+            "ade0b3bd53fc2ac7",
+            "877b88030c0cbc7c",
+            "015c63e16337ddc1",
+            "8b9b2f251fd30280",
+            "536ee6453b6f9cdd",
+            "71d65f3a965f1b3d",
+            "e7ba2a95cb86b767",
+            "3b414c68ed9f3db4",
+            "26664998c3bc6d27"
+        ],
+        "x": 14,
+        "y": 39,
+        "w": 772,
+        "h": 262
+    },
+    {
+        "id": "822d63c92a050ac0",
+        "type": "group",
+        "z": "eabd8c0f450766e3",
+        "style": {
+            "stroke": "#999999",
+            "stroke-opacity": "1",
+            "fill": "none",
+            "fill-opacity": "1",
+            "label": true,
+            "label-position": "nw",
+            "color": "#a4a4a4"
+        },
+        "nodes": [
+            "7494328b925d9ca1",
+            "6cf01ab45fb8a2e4",
+            "e5b763aca641236a",
+            "54e4ec738185a0f6",
+            "3375123206c38f72",
+            "60e7241b1e65685c",
+            "4199525dc1160859",
+            "17081d3070f43813",
+            "ded1351c1308b003",
+            "99c38a6775be4ddc",
+            "30cf7f05b5fc1792"
+        ],
+        "x": 34,
+        "y": 299,
+        "w": 732,
+        "h": 262
+    },
+    {
+        "id": "7b2dd018d51585f2",
+        "type": "group",
+        "z": "eabd8c0f450766e3",
+        "style": {
+            "stroke": "#999999",
+            "stroke-opacity": "1",
+            "fill": "none",
+            "fill-opacity": "1",
+            "label": true,
+            "label-position": "nw",
+            "color": "#a4a4a4"
+        },
+        "nodes": [
+            "2b7833f45f92829a",
+            "6b10f22dc5b93ea4",
+            "5dbe16cabd41d2bf",
+            "3c238eeaa131d557",
+            "09137db36215383f",
+            "c763c26d9f76f9a7",
+            "ba9fa1a54bc7aba0",
+            "91344daaefee6f17",
+            "68737ec9ff221da7",
+            "ef6ba16188483161",
+            "bdd460899c3d338c"
+        ],
+        "x": 54,
+        "y": 939,
+        "w": 712,
+        "h": 262
+    },
+    {
+        "id": "1eef0ea0c496c770",
+        "type": "group",
+        "z": "eabd8c0f450766e3",
+        "style": {
+            "stroke": "#999999",
+            "stroke-opacity": "1",
+            "fill": "none",
+            "fill-opacity": "1",
+            "label": true,
+            "label-position": "nw",
+            "color": "#a4a4a4"
+        },
+        "nodes": [
+            "8ffc35f5ac201977",
+            "7c97f6e6046df6d7",
+            "e8e22eba67b6b99c",
+            "4a545c882c7dce49",
+            "e47bdb19d7143e98",
+            "fbe8a2eccec04e48",
+            "d956972d983926c2",
+            "073d5e82e23eca30",
+            "98165c0cdafd8ad2",
+            "041581bea033c018",
+            "f37b97928b9844d9"
+        ],
+        "x": 34,
+        "y": 619,
+        "w": 792,
+        "h": 262
+    },
+    {
+        "id": "5e1a37f341c103c5",
+        "type": "mqtt in",
+        "z": "eabd8c0f450766e3",
+        "g": "a42be94d7f072361",
+        "name": "Living Room",
+        "topic": "Protocol_pros_1/Living Room",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "ee523f4ef5da132e",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 110,
+        "y": 180,
+        "wires": [
+            [
+                "297335388a29be14",
+                "ade0b3bd53fc2ac7",
+                "877b88030c0cbc7c",
+                "015c63e16337ddc1"
+            ]
+        ]
+    },
+    {
+        "id": "2b7833f45f92829a",
+        "type": "mqtt in",
+        "z": "eabd8c0f450766e3",
+        "g": "7b2dd018d51585f2",
+        "name": "Kitchen",
+        "topic": "Protocol_pros_1/Kitchen",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "ee523f4ef5da132e",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 130,
+        "y": 1060,
+        "wires": [
+            [
+                "6b10f22dc5b93ea4",
+                "5dbe16cabd41d2bf",
+                "3c238eeaa131d557",
+                "09137db36215383f"
+            ]
+        ]
+    },
+    {
+        "id": "7494328b925d9ca1",
+        "type": "mqtt in",
+        "z": "eabd8c0f450766e3",
+        "g": "822d63c92a050ac0",
+        "name": "Gararge",
+        "topic": "Protocol_pros_1/Gararge",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "ee523f4ef5da132e",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 120,
+        "y": 440,
+        "wires": [
+            [
+                "3375123206c38f72",
+                "54e4ec738185a0f6",
+                "e5b763aca641236a",
+                "6cf01ab45fb8a2e4"
+            ]
+        ]
+    },
+    {
+        "id": "297335388a29be14",
+        "type": "change",
+        "z": "eabd8c0f450766e3",
+        "d": true,
+        "g": "a42be94d7f072361",
+        "name": "Location",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "payload.Location",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 360,
+        "y": 80,
+        "wires": [
+            [
+                "8b9b2f251fd30280"
+            ]
+        ]
+    },
+    {
+        "id": "ade0b3bd53fc2ac7",
+        "type": "change",
+        "z": "eabd8c0f450766e3",
+        "g": "a42be94d7f072361",
+        "name": "Temperature",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "payload.Temperature",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 330,
+        "y": 140,
+        "wires": [
+            [
+                "71d65f3a965f1b3d"
+            ]
+        ]
+    },
+    {
+        "id": "877b88030c0cbc7c",
+        "type": "change",
+        "z": "eabd8c0f450766e3",
+        "g": "a42be94d7f072361",
+        "name": "Humidity",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "payload.Humidity",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 360,
+        "y": 200,
+        "wires": [
+            [
+                "26664998c3bc6d27"
+            ]
+        ]
+    },
+    {
+        "id": "015c63e16337ddc1",
+        "type": "change",
+        "z": "eabd8c0f450766e3",
+        "g": "a42be94d7f072361",
+        "name": "Light",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "payload.Light",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 350,
+        "y": 260,
+        "wires": [
+            [
+                "536ee6453b6f9cdd"
+            ]
+        ]
+    },
+    {
+        "id": "8b9b2f251fd30280",
+        "type": "ui_text",
+        "z": "eabd8c0f450766e3",
+        "d": true,
+        "g": "a42be94d7f072361",
+        "group": "7efe00e884c11c66",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "Location",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 580,
+        "y": 80,
+        "wires": []
+    },
+    {
+        "id": "536ee6453b6f9cdd",
+        "type": "ui_text",
+        "z": "eabd8c0f450766e3",
+        "g": "a42be94d7f072361",
+        "group": "7efe00e884c11c66",
+        "order": 4,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "Light",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 570,
+        "y": 260,
+        "wires": []
+    },
+    {
+        "id": "6cf01ab45fb8a2e4",
+        "type": "change",
+        "z": "eabd8c0f450766e3",
+        "d": true,
+        "g": "822d63c92a050ac0",
+        "name": "Location",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "payload.Location",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 320,
+        "y": 340,
+        "wires": [
+            [
+                "60e7241b1e65685c"
+            ]
+        ]
+    },
+    {
+        "id": "e5b763aca641236a",
+        "type": "change",
+        "z": "eabd8c0f450766e3",
+        "g": "822d63c92a050ac0",
+        "name": "Temperature",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "payload.Temperature",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 330,
+        "y": 400,
+        "wires": [
+            [
+                "17081d3070f43813"
+            ]
+        ]
+    },
+    {
+        "id": "54e4ec738185a0f6",
+        "type": "change",
+        "z": "eabd8c0f450766e3",
+        "g": "822d63c92a050ac0",
+        "name": "Humidity",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "payload.Humidity",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 320,
+        "y": 460,
+        "wires": [
+            [
+                "30cf7f05b5fc1792"
+            ]
+        ]
+    },
+    {
+        "id": "3375123206c38f72",
+        "type": "change",
+        "z": "eabd8c0f450766e3",
+        "g": "822d63c92a050ac0",
+        "name": "Light",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "payload.Light",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 310,
+        "y": 520,
+        "wires": [
+            [
+                "4199525dc1160859"
+            ]
+        ]
+    },
+    {
+        "id": "60e7241b1e65685c",
+        "type": "ui_text",
+        "z": "eabd8c0f450766e3",
+        "d": true,
+        "g": "822d63c92a050ac0",
+        "group": "b6263223cca0dda8",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "Location",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 540,
+        "y": 340,
+        "wires": []
+    },
+    {
+        "id": "4199525dc1160859",
+        "type": "ui_text",
+        "z": "eabd8c0f450766e3",
+        "g": "822d63c92a050ac0",
+        "group": "b6263223cca0dda8",
+        "order": 4,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "Light",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 530,
+        "y": 520,
+        "wires": []
+    },
+    {
+        "id": "6b10f22dc5b93ea4",
+        "type": "change",
+        "z": "eabd8c0f450766e3",
+        "d": true,
+        "g": "7b2dd018d51585f2",
+        "name": "Location",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "payload.Location",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 320,
+        "y": 980,
+        "wires": [
+            [
+                "c763c26d9f76f9a7"
+            ]
+        ]
+    },
+    {
+        "id": "5dbe16cabd41d2bf",
+        "type": "change",
+        "z": "eabd8c0f450766e3",
+        "g": "7b2dd018d51585f2",
+        "name": "Temperature",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "payload.Temperature",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 330,
+        "y": 1040,
+        "wires": [
+            [
+                "68737ec9ff221da7"
+            ]
+        ]
+    },
+    {
+        "id": "3c238eeaa131d557",
+        "type": "change",
+        "z": "eabd8c0f450766e3",
+        "g": "7b2dd018d51585f2",
+        "name": "Humidity",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "payload.Humidity",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 320,
+        "y": 1100,
+        "wires": [
+            [
+                "bdd460899c3d338c"
+            ]
+        ]
+    },
+    {
+        "id": "09137db36215383f",
+        "type": "change",
+        "z": "eabd8c0f450766e3",
+        "g": "7b2dd018d51585f2",
+        "name": "Light",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "payload.Light",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 310,
+        "y": 1160,
+        "wires": [
+            [
+                "ba9fa1a54bc7aba0"
+            ]
+        ]
+    },
+    {
+        "id": "c763c26d9f76f9a7",
+        "type": "ui_text",
+        "z": "eabd8c0f450766e3",
+        "d": true,
+        "g": "7b2dd018d51585f2",
+        "group": "6cdf67416ccf33f7",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "Location",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 540,
+        "y": 980,
+        "wires": []
+    },
+    {
+        "id": "ba9fa1a54bc7aba0",
+        "type": "ui_text",
+        "z": "eabd8c0f450766e3",
+        "g": "7b2dd018d51585f2",
+        "group": "6cdf67416ccf33f7",
+        "order": 4,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "Light",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 530,
+        "y": 1160,
+        "wires": []
+    },
+    {
+        "id": "8ffc35f5ac201977",
+        "type": "mqtt in",
+        "z": "eabd8c0f450766e3",
+        "g": "1eef0ea0c496c770",
+        "name": "Bed Room",
+        "topic": "Protocol_pros_1/Bed Room",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "ee523f4ef5da132e",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 120,
+        "y": 740,
+        "wires": [
+            [
+                "7c97f6e6046df6d7",
+                "e8e22eba67b6b99c",
+                "4a545c882c7dce49",
+                "e47bdb19d7143e98"
+            ]
+        ]
+    },
+    {
+        "id": "7c97f6e6046df6d7",
+        "type": "change",
+        "z": "eabd8c0f450766e3",
+        "d": true,
+        "g": "1eef0ea0c496c770",
+        "name": "Location",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "payload.Location",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 380,
+        "y": 660,
+        "wires": [
+            [
+                "fbe8a2eccec04e48"
+            ]
+        ]
+    },
+    {
+        "id": "e8e22eba67b6b99c",
+        "type": "change",
+        "z": "eabd8c0f450766e3",
+        "g": "1eef0ea0c496c770",
+        "name": "Temperature",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "payload.Temperature",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 390,
+        "y": 720,
+        "wires": [
+            [
+                "073d5e82e23eca30"
+            ]
+        ]
+    },
+    {
+        "id": "4a545c882c7dce49",
+        "type": "change",
+        "z": "eabd8c0f450766e3",
+        "g": "1eef0ea0c496c770",
+        "name": "Humidity",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "payload.Humidity",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 380,
+        "y": 780,
+        "wires": [
+            [
+                "f37b97928b9844d9"
+            ]
+        ]
+    },
+    {
+        "id": "e47bdb19d7143e98",
+        "type": "change",
+        "z": "eabd8c0f450766e3",
+        "g": "1eef0ea0c496c770",
+        "name": "Light",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "payload.Light",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 370,
+        "y": 840,
+        "wires": [
+            [
+                "d956972d983926c2"
+            ]
+        ]
+    },
+    {
+        "id": "fbe8a2eccec04e48",
+        "type": "ui_text",
+        "z": "eabd8c0f450766e3",
+        "d": true,
+        "g": "1eef0ea0c496c770",
+        "group": "8756b1a0744756d2",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "Location",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 600,
+        "y": 660,
+        "wires": []
+    },
+    {
+        "id": "d956972d983926c2",
+        "type": "ui_text",
+        "z": "eabd8c0f450766e3",
+        "g": "1eef0ea0c496c770",
+        "group": "8756b1a0744756d2",
+        "order": 4,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "Light",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 590,
+        "y": 840,
+        "wires": []
+    },
+    {
+        "id": "71d65f3a965f1b3d",
+        "type": "function",
+        "z": "eabd8c0f450766e3",
+        "g": "a42be94d7f072361",
+        "name": "function 2",
+        "func": "var num = parseFloat(msg.payload);\nmsg.payload = num;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 520,
+        "y": 140,
+        "wires": [
+            [
+                "e7ba2a95cb86b767"
+            ]
+        ]
+    },
+    {
+        "id": "17081d3070f43813",
+        "type": "function",
+        "z": "eabd8c0f450766e3",
+        "g": "822d63c92a050ac0",
+        "name": "function 3",
+        "func": "var num = parseFloat(msg.payload);\nmsg.payload = num;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 500,
+        "y": 400,
+        "wires": [
+            [
+                "ded1351c1308b003"
+            ]
+        ]
+    },
+    {
+        "id": "073d5e82e23eca30",
+        "type": "function",
+        "z": "eabd8c0f450766e3",
+        "g": "1eef0ea0c496c770",
+        "name": "function 4",
+        "func": "var num = parseFloat(msg.payload);\nmsg.payload = num;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 560,
+        "y": 720,
+        "wires": [
+            [
+                "98165c0cdafd8ad2"
+            ]
+        ]
+    },
+    {
+        "id": "91344daaefee6f17",
+        "type": "ui_widget_thermometer",
+        "z": "eabd8c0f450766e3",
+        "g": "7b2dd018d51585f2",
+        "group": "6cdf67416ccf33f7",
+        "order": 4,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "title": "Kitchen",
+        "numColor": 3,
+        "colorTop": "#f44336",
+        "colorMiddle": "#8bc34a",
+        "colorBottom": "#607ce1",
+        "unit": "°C",
+        "scale": "normal",
+        "minTemp": 0,
+        "maxTemp": 100,
+        "minTempMoreThanMaxTemp": "1",
+        "numberOfDecimals": "0",
+        "showPercentage": "0",
+        "x": 670,
+        "y": 1040,
+        "wires": []
+    },
+    {
+        "id": "68737ec9ff221da7",
+        "type": "function",
+        "z": "eabd8c0f450766e3",
+        "g": "7b2dd018d51585f2",
+        "name": "function 5",
+        "func": "var num = parseFloat(msg.payload);\nmsg.payload = num;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 500,
+        "y": 1040,
+        "wires": [
+            [
+                "91344daaefee6f17"
+            ]
+        ]
+    },
+    {
+        "id": "98165c0cdafd8ad2",
+        "type": "ui_widget_thermometer",
+        "z": "eabd8c0f450766e3",
+        "g": "1eef0ea0c496c770",
+        "group": "8756b1a0744756d2",
+        "order": 4,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "title": "Bed Room",
+        "numColor": 3,
+        "colorTop": "#f44336",
+        "colorMiddle": "#8bc34a",
+        "colorBottom": "#607ce1",
+        "unit": "°C",
+        "scale": "normal",
+        "minTemp": 0,
+        "maxTemp": 100,
+        "minTempMoreThanMaxTemp": "1",
+        "numberOfDecimals": "0",
+        "showPercentage": "0",
+        "x": 730,
+        "y": 720,
+        "wires": []
+    },
+    {
+        "id": "e7ba2a95cb86b767",
+        "type": "ui_widget_thermometer",
+        "z": "eabd8c0f450766e3",
+        "g": "a42be94d7f072361",
+        "group": "7efe00e884c11c66",
+        "order": 4,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "title": "Living Room",
+        "numColor": 3,
+        "colorTop": "#f44336",
+        "colorMiddle": "#8bc34a",
+        "colorBottom": "#607ce1",
+        "unit": "°C",
+        "scale": "normal",
+        "minTemp": 0,
+        "maxTemp": 100,
+        "minTempMoreThanMaxTemp": "1",
+        "numberOfDecimals": "0",
+        "showPercentage": "0",
+        "x": 690,
+        "y": 140,
+        "wires": []
+    },
+    {
+        "id": "ded1351c1308b003",
+        "type": "ui_widget_thermometer",
+        "z": "eabd8c0f450766e3",
+        "g": "822d63c92a050ac0",
+        "group": "b6263223cca0dda8",
+        "order": 4,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "title": "Gararge",
+        "numColor": 3,
+        "colorTop": "#f44336",
+        "colorMiddle": "#8bc34a",
+        "colorBottom": "#607ce1",
+        "unit": "°C",
+        "scale": "normal",
+        "minTemp": 0,
+        "maxTemp": 100,
+        "minTempMoreThanMaxTemp": "1",
+        "numberOfDecimals": "0",
+        "showPercentage": "0",
+        "x": 670,
+        "y": 400,
+        "wires": []
+    },
+    {
+        "id": "3b414c68ed9f3db4",
+        "type": "ui_widget_humidity_tree",
+        "z": "eabd8c0f450766e3",
+        "g": "a42be94d7f072361",
+        "group": "7efe00e884c11c66",
+        "order": 4,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "title": "Living room",
+        "colorHumidMax": "#4379e5",
+        "colorHumidMin": "#945818",
+        "x": 690,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "26664998c3bc6d27",
+        "type": "function",
+        "z": "eabd8c0f450766e3",
+        "g": "a42be94d7f072361",
+        "name": "function 6",
+        "func": "var num = parseFloat(msg.payload);\nmsg.payload = num;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 520,
+        "y": 200,
+        "wires": [
+            [
+                "3b414c68ed9f3db4"
+            ]
+        ]
+    },
+    {
+        "id": "99c38a6775be4ddc",
+        "type": "ui_widget_humidity_tree",
+        "z": "eabd8c0f450766e3",
+        "g": "822d63c92a050ac0",
+        "group": "b6263223cca0dda8",
+        "order": 4,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "title": "Garage",
+        "colorHumidMax": "#4379e5",
+        "colorHumidMin": "#945818",
+        "x": 670,
+        "y": 460,
+        "wires": []
+    },
+    {
+        "id": "30cf7f05b5fc1792",
+        "type": "function",
+        "z": "eabd8c0f450766e3",
+        "g": "822d63c92a050ac0",
+        "name": "function 7",
+        "func": "var num = parseFloat(msg.payload);\nmsg.payload = num;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 500,
+        "y": 460,
+        "wires": [
+            [
+                "99c38a6775be4ddc"
+            ]
+        ]
+    },
+    {
+        "id": "041581bea033c018",
+        "type": "ui_widget_humidity_tree",
+        "z": "eabd8c0f450766e3",
+        "g": "1eef0ea0c496c770",
+        "group": "8756b1a0744756d2",
+        "order": 4,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "title": "Bed room",
+        "colorHumidMax": "#4379e5",
+        "colorHumidMin": "#945818",
+        "x": 730,
+        "y": 780,
+        "wires": []
+    },
+    {
+        "id": "f37b97928b9844d9",
+        "type": "function",
+        "z": "eabd8c0f450766e3",
+        "g": "1eef0ea0c496c770",
+        "name": "function 8",
+        "func": "var num = parseFloat(msg.payload);\nmsg.payload = num;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 560,
+        "y": 780,
+        "wires": [
+            [
+                "041581bea033c018"
+            ]
+        ]
+    },
+    {
+        "id": "ef6ba16188483161",
+        "type": "ui_widget_humidity_tree",
+        "z": "eabd8c0f450766e3",
+        "g": "7b2dd018d51585f2",
+        "group": "6cdf67416ccf33f7",
+        "order": 4,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "title": "Kitchen",
+        "colorHumidMax": "#4379e5",
+        "colorHumidMin": "#945818",
+        "x": 670,
+        "y": 1100,
+        "wires": []
+    },
+    {
+        "id": "bdd460899c3d338c",
+        "type": "function",
+        "z": "eabd8c0f450766e3",
+        "g": "7b2dd018d51585f2",
+        "name": "function 9",
+        "func": "var num = parseFloat(msg.payload);\nmsg.payload = num;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 500,
+        "y": 1100,
+        "wires": [
+            [
+                "ef6ba16188483161"
+            ]
+        ]
+    },
+    {
+        "id": "ee523f4ef5da132e",
+        "type": "mqtt-broker",
+        "name": "",
+        "broker": "test.mosquitto.org",
+        "port": "1883",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "7efe00e884c11c66",
+        "type": "ui_group",
+        "name": "Living Room",
+        "tab": "3b5b5d094af9098d",
+        "order": 2,
+        "disp": true,
+        "width": "6",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "b6263223cca0dda8",
+        "type": "ui_group",
+        "name": "Gararge",
+        "tab": "3b5b5d094af9098d",
+        "order": 3,
+        "disp": true,
+        "width": "6",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "6cdf67416ccf33f7",
+        "type": "ui_group",
+        "name": "Kitchen",
+        "tab": "3b5b5d094af9098d",
+        "order": 1,
+        "disp": true,
+        "width": "6",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "8756b1a0744756d2",
+        "type": "ui_group",
+        "name": "Bed Room",
+        "tab": "3b5b5d094af9098d",
+        "order": 4,
+        "disp": true,
+        "width": "6",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "3b5b5d094af9098d",
+        "type": "ui_tab",
+        "name": "Home_data",
+        "icon": "dashboard",
+        "order": 1,
+        "disabled": false,
+        "hidden": false
+    }
+]
