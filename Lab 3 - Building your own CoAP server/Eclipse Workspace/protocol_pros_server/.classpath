@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-17">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="lib" path="C:/Users/lasit/Downloads/Notes/EN3251---Internet-of-Things/Lab 3 - Building your own CoAP server/exported Jar/californium-core-2.0.0.jar">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/Users/lasit/Downloads/Notes/EN3251---Internet-of-Things/Lab 3 - Building your own CoAP server/exported Jar/californium-legal-2.0.0.jar">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/Users/lasit/Downloads/Notes/EN3251---Internet-of-Things/Lab 3 - Building your own CoAP server/exported Jar/element-connector-2.0.0.jar">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/Users/lasit/Downloads/Notes/EN3251---Internet-of-Things/Lab 3 - Building your own CoAP server/exported Jar/slf4j-api-1.7.30.jar">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/Users/lasit/Downloads/Notes/EN3251---Internet-of-Things/Lab 3 - Building your own CoAP server/exported Jar/slf4j-simple-1.7.30.jar">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
