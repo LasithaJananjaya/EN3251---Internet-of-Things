@@ -1,0 +1,145 @@
+#include <Arduino.h>
+#include <ESP8266WiFi.h>
+#include <PubSubClient.h>
+#include <ArduinoJson.h>
+
+StaticJsonDocument<200> sensor_out;
+String data_out;
+
+#define PERIOD 5000
+char buffer[100];
+StaticJsonDocument<200> doc;
+
+const char *SSID = "iPhone 7 plus";              //"Pixel 6a"                  // SSID of your WiFi
+const char *PASSWORD = "hello_world";            //"pixelmcr6a"             //"206fde266242";       // Password of your WiFi
+const char *mqqttBroker = "test.mosquitto.org";  // alternate hosts: test.mosquitto.or, broker.hivemq.com
+const int mqttPort = 1883;
+const char *mqttClientID = "200650U";   // CHANGE THIS acording to your group number
+const char *POTTopic = "protocolpros";  // Topic for potentiometer (publish)
+
+String ssid;
+int32_t rssi;
+uint8_t encryptionType;
+uint8_t *bssid;
+int32_t channel;
+bool hidden;
+int scanResult;
+
+WiFiClient espClient;
+PubSubClient mqttClient(espClient);
+
+
+void mqttInit() {
+  mqttClient.setServer(mqqttBroker, mqttPort);
+  WiFi.begin(SSID, PASSWORD);
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+    Serial.print(".");
+  }
+  Serial.println("");
+  Serial.print("Connected to ");
+  Serial.println(SSID);
+  Serial.print("IP address: ");
+  Serial.println(WiFi.localIP());
+}
+
+void mqttLoop() {
+  while (!mqttClient.connected()) {
+    Serial.print("Attempting MQTT connection...");
+    if (mqttClient.connect(mqttClientID)) {
+      Serial.println("connected");
+    } else {
+      Serial.print("failed, rc=");
+      Serial.print(mqttClient.state());
+      Serial.println(" try again in 5 seconds");
+      delay(5000);
+    }
+  }
+  mqttClient.loop();
+}
+
+void sendValues() {
+  //serializeJson(doc, buffer);
+  //serializeJson(buffer, data_out);
+  //mqttClient.publish(POTTopic, data_out.c_str());
+
+  serializeJson(doc, data_out);
+  mqttClient.publish(POTTopic, data_out.c_str());
+  Serial.println("----------------------------doc-----------------------------");
+  //Serial.println(doc);
+  Serial.println("----------------------------data_out-----------------------------");
+  Serial.println(data_out);
+  Serial.println("-------------------------Published-------------------------");
+}
+
+void setup() {
+  Serial.begin(115200);
+  mqttInit();
+}
+
+void loop() {
+  //--------------Scanning------------------------------------
+  // Set WiFi to station mode
+  //WiFi.mode(WIFI_STA);
+  WiFi.mode(WIFI_AP_STA);
+  // Disconnect from an AP if it was previously connected
+  //WiFi.disconnect();
+  //delay(100);
+
+  Serial.println(F("Starting WiFi scan..."));
+
+  scanResult = WiFi.scanNetworks(/*async=*/false, /*hidden=*/true);
+
+  if (scanResult == 0) {
+    Serial.println(F("No networks found"));
+  }
+
+  else if (scanResult > 0) {
+    Serial.printf(PSTR("%d networks found:\n"), scanResult);
+
+    // Print unsorted scan results
+    for (int8_t i = 0; i < scanResult; i++) {
+      WiFi.getNetworkInfo(i, ssid, encryptionType, rssi, bssid, channel, hidden);
+
+      // get extra info
+      const bss_info *bssInfo = WiFi.getScanInfoByIndex(i);
+      String phyMode;
+      if (bssInfo) {
+        phyMode.reserve(12);
+        phyMode = F("802.11");
+        String slash;
+        if (bssInfo->phy_11b) {
+          phyMode += 'b';
+          slash = '/';
+        }
+        if (bssInfo->phy_11g) {
+          phyMode += slash + 'g';
+          slash = '/';
+        }
+      }
+
+      doc["networks"] = scanResult;
+      char bssidStr[12];  // Create a char array to hold the BSSID as a string
+      snprintf(bssidStr, sizeof(bssidStr), "%02X:%02X:%02X:%02X:%02X:%02X", bssid[0], bssid[1], bssid[2], bssid[3], bssid[4], bssid[5]);
+      doc["bssid"] = bssidStr;
+      doc["rssi"] = rssi;
+      doc["ssid"] = ssid.c_str();
+      Serial.printf(PSTR("  %02d: [CH %02d] [%02X:%02X:%02X:%02X:%02X:%02X] %ddBm %s\n"), i, channel, bssid[0], bssid[1], bssid[2], bssid[3], bssid[4], bssid[5], rssi, ssid.c_str());
+      yield();
+    }
+  }
+
+  else {
+    Serial.printf(PSTR("WiFi scan error %d"), scanResult);
+  }
+
+  // Wait a bit before scanning again
+  delay(PERIOD);
+
+
+  //---------------Publishing----------------------------------------
+  //mqttInit();
+  mqttLoop();
+  sendValues();
+  //WiFi.disconnect();
+}

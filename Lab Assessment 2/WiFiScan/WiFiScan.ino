@@ -33,7 +33,9 @@ void loop() {
 
   if (scanResult == 0) {
     Serial.println(F("No networks found"));
-  } else if (scanResult > 0) {
+  }
+
+  else if (scanResult > 0) {
     Serial.printf(PSTR("%d networks found:\n"), scanResult);
 
     // Print unsorted scan results
@@ -43,7 +45,6 @@ void loop() {
       // get extra info
       const bss_info *bssInfo = WiFi.getScanInfoByIndex(i);
       String phyMode;
-      const char *wps = "";
       if (bssInfo) {
         phyMode.reserve(12);
         phyMode = F("802.11");
@@ -56,17 +57,13 @@ void loop() {
           phyMode += slash + 'g';
           slash = '/';
         }
-        if (bssInfo->phy_11n) {
-          phyMode += slash + 'n';
-        }
-        if (bssInfo->wps) {
-          wps = PSTR("WPS");
-        }
       }
-      Serial.printf(PSTR("  %02d: [CH %02d] [%02X:%02X:%02X:%02X:%02X:%02X] %ddBm %c %c %-11s %3S %s\n"), i, channel, bssid[0], bssid[1], bssid[2], bssid[3], bssid[4], bssid[5], rssi, (encryptionType == ENC_TYPE_NONE) ? ' ' : '*', hidden ? 'H' : 'V', phyMode.c_str(), wps, ssid.c_str());
+      Serial.printf(PSTR("  %02d: [CH %02d] [%02X:%02X:%02X:%02X:%02X:%02X] %ddBm %s\n"), i, channel, bssid[0], bssid[1], bssid[2], bssid[3], bssid[4], bssid[5], rssi, ssid.c_str());
       yield();
     }
-  } else {
+  }
+  
+  else {
     Serial.printf(PSTR("WiFi scan error %d"), scanResult);
   }
 
