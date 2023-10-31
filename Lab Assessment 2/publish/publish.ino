@@ -88,9 +88,9 @@ void loop() {
 
       char bssidStr[18];  // Create a char array to hold the BSSID as a string
       snprintf(bssidStr, sizeof(bssidStr), "%02X:%02X:%02X:%02X:%02X:%02X", bssid[0], bssid[1], bssid[2], bssid[3], bssid[4], bssid[5]);
-      doc[i]["bssid"] = bssidStr;
-      doc[i]["rssi"] = rssi;
-      doc[i]["ssid"] = ssid; //ssid.c_str();
+      doc[i]["BSSID"] = bssidStr;
+      doc[i]["RSSI"] = rssi;
+      doc[i]["SSID"] = ssid; //ssid.c_str();
       Serial.printf(PSTR("  %02d: [CH %02d] [%02X:%02X:%02X:%02X:%02X:%02X] %ddBm %s\n"), i, channel, bssid[0], bssid[1], bssid[2], bssid[3], bssid[4], bssid[5], rssi, ssid.c_str());
       yield();
     }
