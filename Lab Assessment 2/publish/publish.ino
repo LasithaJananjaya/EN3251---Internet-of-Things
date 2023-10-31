@@ -7,9 +7,9 @@
 StaticJsonDocument<2048> doc;
 String data_out;
 
-const char *SSID = "Pixel 6a";              //"iPhone 7 plus"                  // SSID of your WiFi
-const char *PASSWORD = "pixelmcr6a";            //"hello_world"             //"206fde266242";       // Password of your WiFi
-const char *mqqttBroker = "test.mosquitto.org";  // alternate hosts: test.mosquitto.org, broker.hivemq.com
+const char *SSID = "Pixel 6a";              //"iPhone 7 plus", "Pixel 6a"                  // SSID of your WiFi
+const char *PASSWORD = "pixelmcr6a";            //"hello_world", "pixelmcr6a"             //"206fde266242";       // Password of your WiFi
+const char *mqqttBroker = "broker.hivemq.com";  // alternate hosts: test.mosquitto.org, broker.hivemq.com
 const int mqttPort = 1883;
 const char *mqttClientID = "200650U";   // CHANGE THIS acording to your group number
 const char *POTTopic = "protocolpros";  // Topic for potentiometer (publish)
@@ -60,7 +60,6 @@ void sendValues() {
   Serial.println("----------------------------------------data_out----------------------------------------");
   Serial.println(data_out);
   Serial.println("----------------------------------------Published----------------------------------------");
-  //doc = {};
   doc.clear();
   data_out = "";
   Serial.println("----------------------------------------doc_clear----------------------------------------");
@@ -76,8 +75,6 @@ void loop() {
   WiFi.mode(WIFI_AP_STA);
   Serial.println(F("Starting WiFi scan..."));
   scanResult = WiFi.scanNetworks(/*async=*/false, /*hidden=*/true);
-  Serial.println("-----------------------------------Reached Tag 1-----------------------------------");
-  //doc["networks"] = scanResult;
 
   if (scanResult == 0) {
     Serial.println(F("No networks found"));
@@ -104,7 +101,6 @@ void loop() {
   }
   // Wait a bit before scanning again
   delay(PERIOD);
-
 
   //----------------------------------------Publishing----------------------------------------
   mqttLoop();
