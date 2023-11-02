@@ -7,8 +7,8 @@
 StaticJsonDocument<2048> doc;
 String data_out;
 
-const char *SSID = "Pixel 6a";              //"iPhone 7 plus", "Pixel 6a"                  // SSID of your WiFi
-const char *PASSWORD = "pixelmcr6a";            //"hello_world", "pixelmcr6a"             //"206fde266242";       // Password of your WiFi
+const char *SSID = "iPhone 7 plus";              //"iPhone 7 plus", "Pixel 6a"                  // SSID of your WiFi
+const char *PASSWORD = "lasithaentc";            //"lasithaentc", "pixelmcr6a"             //"206fde266242";       // Password of your WiFi
 const char *mqqttBroker = "broker.hivemq.com";  // alternate hosts: test.mosquitto.org, broker.hivemq.com
 const int mqttPort = 1883;
 const char *mqttClientID = "200650U";   // CHANGE THIS acording to your group number
