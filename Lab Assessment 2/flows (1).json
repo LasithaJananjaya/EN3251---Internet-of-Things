@@ -1,0 +1,289 @@
+[
+    {
+        "id": "b3de23e872d2d399",
+        "type": "tab",
+        "label": "Flow 3",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "63d05068945c6e50",
+        "type": "function",
+        "z": "b3de23e872d2d399",
+        "name": "function 6",
+        "func": "var networks = msg.payload;\nmsg.params = {\n    $val1: networks[0],\n    $val2: networks[1],\n    $val3: networks[2]\n    }\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 680,
+        "y": 120,
+        "wires": [
+            [
+                "f8e6d9ec15aea4f0"
+            ]
+        ]
+    },
+    {
+        "id": "f8e6d9ec15aea4f0",
+        "type": "sqlite",
+        "z": "b3de23e872d2d399",
+        "mydb": "18b07b80876fc415",
+        "sqlquery": "prepared",
+        "sql": "INSERT INTO wifiscan (BSSID, RSSI, SSID) VALUES($val1, $val2, $val3)",
+        "name": "testDB",
+        "x": 870,
+        "y": 120,
+        "wires": [
+            [
+                "22a9102edb3b7fd1"
+            ]
+        ]
+    },
+    {
+        "id": "1e13ca1f21fd6395",
+        "type": "mqtt in",
+        "z": "b3de23e872d2d399",
+        "name": "",
+        "topic": "protocolpros",
+        "qos": "0",
+        "datatype": "auto-detect",
+        "broker": "257b6aa0b8ba95dd",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 130,
+        "y": 120,
+        "wires": [
+            [
+                "e026e6e9c6d28d51"
+            ]
+        ]
+    },
+    {
+        "id": "e026e6e9c6d28d51",
+        "type": "function",
+        "z": "b3de23e872d2d399",
+        "name": "function 7",
+        "func": "var networks = msg.payload;\nvar strings = [];\n\n\nfor (var i = 0; i < networks.length; i++) {\n    var arr = [];\n    var ssid = [];\n    var bssid = [];\n    var rssi = [];\n    var pair = {\n        SSID: networks[i].SSID,\n        BSSID: networks[i].BSSID,\n        RSSI: networks[i].RSSI\n    };\n\n    var arr = [pair.SSID,pair.BSSID, pair.RSSI];\n    strings.push(arr);\n}\n\nmsg.payload = strings; // Send an array of strings containing SSID, BSSID, and RSSI\nreturn msg;\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 340,
+        "y": 120,
+        "wires": [
+            [
+                "229572ebc865bf4f"
+            ]
+        ]
+    },
+    {
+        "id": "229572ebc865bf4f",
+        "type": "split",
+        "z": "b3de23e872d2d399",
+        "name": "",
+        "splt": "",
+        "spltType": "str",
+        "arraySplt": 1,
+        "arraySpltType": "len",
+        "stream": false,
+        "addname": "",
+        "x": 530,
+        "y": 120,
+        "wires": [
+            [
+                "63d05068945c6e50"
+            ]
+        ]
+    },
+    {
+        "id": "eb3da8df3ff51b99",
+        "type": "function",
+        "z": "b3de23e872d2d399",
+        "name": "function 8",
+        "func": "var inputData = msg.payload;\nvar result = {};\n\nfor (var i = 0; i < inputData.length; i++) {\n    var item = inputData[i];\n    var ssid = item.SSID;\n    var rssi = item.RSSI;\n\n    // Check if the SSID key already exists in the result object\n\n    // Push the RSSI value into the result object under the SSID key\n    result[ssid] = rssi;\n}\n\n// Send the result as the output\nmsg.payload = result;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 280,
+        "y": 240,
+        "wires": [
+            [
+                "e9cc5b5e38a8d536"
+            ]
+        ]
+    },
+    {
+        "id": "b4e94fe76e66d929",
+        "type": "csv",
+        "z": "b3de23e872d2d399",
+        "name": "",
+        "sep": ",",
+        "hdrin": "",
+        "hdrout": "once",
+        "multi": "one",
+        "ret": "\\n",
+        "temp": "",
+        "skip": "0",
+        "strings": true,
+        "include_empty_strings": "",
+        "include_null_values": "",
+        "x": 630,
+        "y": 240,
+        "wires": [
+            [
+                "144b919f3da10634"
+            ]
+        ]
+    },
+    {
+        "id": "e9cc5b5e38a8d536",
+        "type": "function",
+        "z": "b3de23e872d2d399",
+        "name": "function 9",
+        "func": "var inputData = msg.payload;\n// Create an array to hold the CSV data\nvar csvData = [];\ncsvData.push(Object.keys(inputData)); // Add the CSV headers\ncsvData.push(Object.values(inputData)); // Add the values\ncsvData.push([35,65,75,85]);\n\n// Send the CSV data as the output\nmsg.payload = csvData;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 460,
+        "y": 240,
+        "wires": [
+            [
+                "b4e94fe76e66d929"
+            ]
+        ]
+    },
+    {
+        "id": "144b919f3da10634",
+        "type": "file",
+        "z": "b3de23e872d2d399",
+        "name": "",
+        "filename": "C:\\Users\\sakur\\Documents\\NodeRed\\wifiscan.csv",
+        "filenameType": "str",
+        "appendNewline": true,
+        "createDir": false,
+        "overwriteFile": "false",
+        "encoding": "none",
+        "x": 890,
+        "y": 540,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "22a9102edb3b7fd1",
+        "type": "sqlite",
+        "z": "b3de23e872d2d399",
+        "mydb": "18b07b80876fc415",
+        "sqlquery": "fixed",
+        "sql": "SELECT * FROM wifiscan;",
+        "name": "retrieval",
+        "x": 900,
+        "y": 240,
+        "wires": [
+            [
+                "8cd2cf215341f6ad"
+            ]
+        ]
+    },
+    {
+        "id": "8cd2cf215341f6ad",
+        "type": "function",
+        "z": "b3de23e872d2d399",
+        "name": "function 10",
+        "func": "var formattedData = msg.payload.map(function (item) {\n    return {\n        entryField1: item.field1,\n        entryField2: item.field2,\n        entryField3: item.field3,\n        // Add more fields as needed\n    };\n});\n\nmsg.payload = formattedData;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1010,
+        "y": 320,
+        "wires": [
+            [
+                "72f3dc136420dc8d"
+            ]
+        ]
+    },
+    {
+        "id": "72f3dc136420dc8d",
+        "type": "ui_template",
+        "z": "b3de23e872d2d399",
+        "group": "ba4e9071c806839c",
+        "name": "",
+        "order": 0,
+        "width": 0,
+        "height": 0,
+        "format": "<h3>All Entries</h3>\n<table>\n    <tr>\n        <th>Field 1</th>\n        <th>Field 2</th>\n        <th>Field 3</th>\n        <!-- Add more table headers as needed -->\n    </tr>\n    <tr ng-repeat=\"entry in msg.payload\">\n        <td>{{ entry.entryField1 }}</td>\n        <td>{{ entry.entryField2 }}</td>\n        <td>{{ entry.entryField3 }}</td>\n        <!-- Add more table data cells as needed -->\n    </tr>\n</table>",
+        "storeOutMessages": true,
+        "fwdInMessages": true,
+        "resendOnRefresh": true,
+        "templateScope": "local",
+        "className": "",
+        "x": 1080,
+        "y": 420,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "18b07b80876fc415",
+        "type": "sqlitedb",
+        "db": "C:\\Users\\sakur\\Documents\\NodeRed\\mydb.db",
+        "mode": "RWC"
+    },
+    {
+        "id": "257b6aa0b8ba95dd",
+        "type": "mqtt-broker",
+        "name": "",
+        "broker": "broker.hivemq.com",
+        "port": "1883",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "ba4e9071c806839c",
+        "type": "ui_group",
+        "name": "Default",
+        "tab": "58638f7f95d949ab",
+        "order": 1,
+        "disp": true,
+        "width": "6",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "58638f7f95d949ab",
+        "type": "ui_tab",
+        "name": "Tab 3",
+        "icon": "dashboard",
+        "order": 3
+    }
+]

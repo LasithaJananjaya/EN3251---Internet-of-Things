@@ -1,0 +1,1616 @@
+[
+    {
+        "id": "a50c419ae1813cc9",
+        "type": "tab",
+        "label": "Assignment 02",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "5587997a810d2e55",
+        "type": "mqtt in",
+        "z": "a50c419ae1813cc9",
+        "name": "",
+        "topic": "protocolpros",
+        "qos": "0",
+        "datatype": "auto-detect",
+        "broker": "99d45b4947d49183",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 110,
+        "y": 240,
+        "wires": [
+            [
+                "7175482101e83ef3"
+            ]
+        ]
+    },
+    {
+        "id": "7175482101e83ef3",
+        "type": "function",
+        "z": "a50c419ae1813cc9",
+        "name": "Network strings",
+        "func": "var networks = msg.payload;\nvar strings = [];\n\nfor (var i = 0; i < networks.length; i++) {\n    var pair = {\n        SSID: networks[i].SSID,\n        BSSID: networks[i].BSSID,\n        RSSI: networks[i].RSSI\n    };\n\n    // Display all three values but only send BSSID and RSSI as output\n    var string = \"SSID: \" + pair.SSID + \", BSSID: \" + pair.BSSID + \", RSSI: \" + pair.RSSI;\n    strings.push(string);\n}\n\nmsg.payload = strings; // Send an array of strings containing SSID, BSSID, and RSSI\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 300,
+        "y": 240,
+        "wires": [
+            [
+                "25c249671614a527",
+                "2f49602a4389c9d1",
+                "0b539f2ac6f9cece",
+                "64713664d2b1edcb",
+                "95e36916a7da43b1",
+                "467db65c52010df6",
+                "46e21a7c13e391e5",
+                "ce59bb100f080fd3",
+                "5a802daa15a15914",
+                "311de99a46e09930"
+            ]
+        ]
+    },
+    {
+        "id": "25c249671614a527",
+        "type": "function",
+        "z": "a50c419ae1813cc9",
+        "name": "UoM_wireless0",
+        "func": "const inputArray = msg.payload;\n\nconst targetBSSID = \"2C:0B:E9:C4:7F:A0\";\nlet found = false;\nlet rssiValue;\n\nfor (const entry of inputArray) {\n    if (entry.includes(targetBSSID)) {\n        const rssiMatch = entry.match(/RSSI: (-\\d+)/);\n        if (rssiMatch) {\n            rssiValue = parseInt(rssiMatch[1]);\n            found = true;\n            break;\n        }\n    }\n}\n\nif (found) {\n    msg.payload = rssiValue; // Set the payload of the message to rssiValue\n    return msg; // Return the modified message\n} else {\n    console.log(`BSSID ${targetBSSID} not found in the array.`);\n    return null; // Return null or another error message as needed\n}",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 560,
+        "y": 320,
+        "wires": [
+            [
+                "ed0d3e220ee84e0f"
+            ]
+        ]
+    },
+    {
+        "id": "78c6c3fd8138b99f",
+        "type": "ui_template",
+        "z": "a50c419ae1813cc9",
+        "group": "e08c9e5e227fe4f4",
+        "name": "RSSI Values",
+        "order": 1,
+        "width": 10,
+        "height": 10,
+        "format": "<table>\n    <thead>\n        <tr>\n            <th>BSSID</th>\n            <th>SSID</th>\n            <th>RSSI</th>\n        </tr>\n    </thead>\n    <tbody>\n        <tr ng-repeat=\"pair in msg.payload\">\n            <td>{{ pair.BSSID }}</td>\n            <td>{{ pair.SSID }}</td>\n            <td>{{ pair.RSSI }}</td>\n        </tr>\n    </tbody>\n</table>",
+        "storeOutMessages": true,
+        "fwdInMessages": true,
+        "resendOnRefresh": true,
+        "templateScope": "local",
+        "className": "",
+        "x": 850,
+        "y": 240,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "2f49602a4389c9d1",
+        "type": "function",
+        "z": "a50c419ae1813cc9",
+        "name": "Network Scanned",
+        "func": "// Get the array of strings from the previous function node\nvar strings = msg.payload;\n\n// Initialize an array to store objects with BSSID and RSSI\nvar bssidRssiPairs = [];\n\n// Parse the strings and create objects with BSSID and RSSI\nfor (var i = 0; i < strings.length; i++) {\n    var parts = strings[i].split(\", \");\n    var pair = {}; // Initialize an empty object for the pair\n    for (var j = 0; j < parts.length; j++) {\n        var keyValue = parts[j].split(\": \");\n        if (keyValue[0] === \"BSSID\" ||keyValue[0] === \"SSID\" || keyValue[0] === \"RSSI\") {\n            pair[keyValue[0]] = keyValue[1];\n        }\n    }\n    bssidRssiPairs.push(pair);\n}\n\n// Set the array of objects as the payload\nmsg.payload = bssidRssiPairs;\n\n// Return the message\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 570,
+        "y": 240,
+        "wires": [
+            [
+                "78c6c3fd8138b99f"
+            ]
+        ]
+    },
+    {
+        "id": "0b539f2ac6f9cece",
+        "type": "function",
+        "z": "a50c419ae1813cc9",
+        "name": "A6+",
+        "func": "const inputArray = msg.payload;\n\nconst targetBSSID = \"D6:E6:B7:92:F2:1B\";\nlet found = false;\nlet rssiValue;\n\nfor (const entry of inputArray) {\n    if (entry.includes(targetBSSID)) {\n        const rssiMatch = entry.match(/RSSI: (-\\d+)/);\n        if (rssiMatch) {\n            rssiValue = parseInt(rssiMatch[1]);\n            found = true;\n            break;\n        }\n    }\n}\n\nif (found) {\n    msg.payload = rssiValue; // Set the payload of the message to rssiValue\n    return msg; // Return the modified message\n} else {\n    console.log(`BSSID ${targetBSSID} not found in the array.`);\n    return null; // Return null or another error message as needed\n}",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 550,
+        "y": 1180,
+        "wires": [
+            [
+                "12f80e8d98f61f14"
+            ]
+        ]
+    },
+    {
+        "id": "64713664d2b1edcb",
+        "type": "function",
+        "z": "a50c419ae1813cc9",
+        "name": "eduroam0",
+        "func": "const inputArray = msg.payload;\n\nconst targetBSSID = \"D6:E6:B7:92:F2:1B\";\nlet found = false;\nlet rssiValue;\n\nfor (const entry of inputArray) {\n    if (entry.includes(targetBSSID)) {\n        const rssiMatch = entry.match(/RSSI: (-\\d+)/);\n        if (rssiMatch) {\n            rssiValue = parseInt(rssiMatch[1]);\n            found = true;\n            break;\n        }\n    }\n}\n\nif (found) {\n    msg.payload = rssiValue; // Set the payload of the message to rssiValue\n    return msg; // Return the modified message\n} else {\n    console.log(`BSSID ${targetBSSID} not found in the array.`);\n    return null; // Return null or another error message as needed\n}",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 550,
+        "y": 520,
+        "wires": [
+            [
+                "d37e72fcd8668070"
+            ]
+        ]
+    },
+    {
+        "id": "95e36916a7da43b1",
+        "type": "function",
+        "z": "a50c419ae1813cc9",
+        "name": "Dialog UoM Lab 2G",
+        "func": "const inputArray = msg.payload;\n\nconst targetBSSID = \"90:61:0C:82:60:F3\";\nlet found = false;\nlet rssiValue;\n\nfor (const entry of inputArray) {\n    if (entry.includes(targetBSSID)) {\n        const rssiMatch = entry.match(/RSSI: (-\\d+)/);\n        if (rssiMatch) {\n            rssiValue = parseInt(rssiMatch[1]);\n            found = true;\n            break;\n        }\n    }\n}\n\nif (found) {\n    msg.payload = rssiValue; // Set the payload of the message to rssiValue\n    return msg; // Return the modified message\n} else {\n    console.log(`BSSID ${targetBSSID} not found in the array.`);\n    return null; // Return null or another error message as needed\n}",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 580,
+        "y": 620,
+        "wires": [
+            [
+                "b13b11c0ed8ef6ed"
+            ]
+        ]
+    },
+    {
+        "id": "467db65c52010df6",
+        "type": "function",
+        "z": "a50c419ae1813cc9",
+        "name": "eduroam1",
+        "func": "const inputArray = msg.payload;\n\nconst targetBSSID = \"2C:0B:E9:C4:79:C1\";\nlet found = false;\nlet rssiValue;\n\nfor (const entry of inputArray) {\n    if (entry.includes(targetBSSID)) {\n        const rssiMatch = entry.match(/RSSI: (-\\d+)/);\n        if (rssiMatch) {\n            rssiValue = parseInt(rssiMatch[1]);\n            found = true;\n            break;\n        }\n    }\n}\n\nif (found) {\n    msg.payload = rssiValue; // Set the payload of the message to rssiValue\n    return msg; // Return the modified message\n} else {\n    console.log(`BSSID ${targetBSSID} not found in the array.`);\n    return null; // Return null or another error message as needed\n}",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 550,
+        "y": 720,
+        "wires": [
+            [
+                "58dd606c77729dc3"
+            ]
+        ]
+    },
+    {
+        "id": "46e21a7c13e391e5",
+        "type": "function",
+        "z": "a50c419ae1813cc9",
+        "name": "eduroam2",
+        "func": "const inputArray = msg.payload;\n\nconst targetBSSID = \"2C:0B:E9:C4:7F:A1\";\nlet found = false;\nlet rssiValue;\n\nfor (const entry of inputArray) {\n    if (entry.includes(targetBSSID)) {\n        const rssiMatch = entry.match(/RSSI: (-\\d+)/);\n        if (rssiMatch) {\n            rssiValue = parseInt(rssiMatch[1]);\n            found = true;\n            break;\n        }\n    }\n}\n\nif (found) {\n    msg.payload = rssiValue; // Set the payload of the message to rssiValue\n    return msg; // Return the modified message\n} else {\n    console.log(`BSSID ${targetBSSID} not found in the array.`);\n    return null; // Return null or another error message as needed\n}",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 550,
+        "y": 820,
+        "wires": [
+            [
+                "50706b369b9f5e4e"
+            ]
+        ]
+    },
+    {
+        "id": "ce59bb100f080fd3",
+        "type": "function",
+        "z": "a50c419ae1813cc9",
+        "name": "UoM_wireless1",
+        "func": "const inputArray = msg.payload;\n\nconst targetBSSID = \"2C:0B:E9:C4:7A:E0\";\nlet found = false;\nlet rssiValue;\n\nfor (const entry of inputArray) {\n    if (entry.includes(targetBSSID)) {\n        const rssiMatch = entry.match(/RSSI: (-\\d+)/);\n        if (rssiMatch) {\n            rssiValue = parseInt(rssiMatch[1]);\n            found = true;\n            break;\n        }\n    }\n}\n\nif (found) {\n    msg.payload = rssiValue; // Set the payload of the message to rssiValue\n    return msg; // Return the modified message\n} else {\n    console.log(`BSSID ${targetBSSID} not found in the array.`);\n    return null; // Return null or another error message as needed\n}",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 560,
+        "y": 940,
+        "wires": [
+            [
+                "6bf4ab1cfe416d5b"
+            ]
+        ]
+    },
+    {
+        "id": "5a802daa15a15914",
+        "type": "function",
+        "z": "a50c419ae1813cc9",
+        "name": "UoM_wireless2",
+        "func": "const inputArray = msg.payload;\n\nconst targetBSSID = \"A4:B2:39:0E:B3:C0\";\nlet found = false;\nlet rssiValue;\n\nfor (const entry of inputArray) {\n    if (entry.includes(targetBSSID)) {\n        const rssiMatch = entry.match(/RSSI: (-\\d+)/);\n        if (rssiMatch) {\n            rssiValue = parseInt(rssiMatch[1]);\n            found = true;\n            break;\n        }\n    }\n}\n\nif (found) {\n    msg.payload = rssiValue; // Set the payload of the message to rssiValue\n    return msg; // Return the modified message\n} else {\n    console.log(`BSSID ${targetBSSID} not found in the array.`);\n    return null; // Return null or another error message as needed\n}",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 580,
+        "y": 1060,
+        "wires": [
+            [
+                "35fb04a05a8a1dde"
+            ]
+        ]
+    },
+    {
+        "id": "311de99a46e09930",
+        "type": "function",
+        "z": "a50c419ae1813cc9",
+        "name": "Pixel_6a",
+        "func": "const inputArray = msg.payload;\nconst targetBSSID = \"4A:FC:2B:A7:17:1D\";\nlet found = false;\nlet rssiValue;\n\nfor (const entry of inputArray) {\n    if (entry.includes(targetBSSID)) {\n        const rssiMatch = entry.match(/RSSI: (-\\d+)/);\n        if (rssiMatch) {\n            rssiValue = parseInt(rssiMatch[1]);\n            found = true;\n            break;\n        }\n    }\n}\n\nif (found) {\n    msg.payload = rssiValue; // Set the payload of the message to rssiValue\n    return msg; // Return the modified message\n} else {\n    console.log(`BSSID ${targetBSSID} not found in the array.`);\n    return null; // Return null or another error message as needed\n}",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 560,
+        "y": 420,
+        "wires": [
+            [
+                "7a71ab9e94dbbdde"
+            ]
+        ]
+    },
+    {
+        "id": "7a71ab9e94dbbdde",
+        "type": "function",
+        "z": "a50c419ae1813cc9",
+        "name": "Mean and Deviation",
+        "func": "// Initialize an array to store RSSI values\nif (!context.rssiArray) {\n    context.rssiArray = [];\n}\n\n// Extract the RSSI value from the incoming message\nvar newRSSI = msg.payload; // Assuming the RSSI value is in the message payload\n\n// Check if the incoming payload is a number (RSSI value)\nif (typeof newRSSI === 'number') {\n    // Add the RSSI value to the array\n    context.rssiArray.push(newRSSI);\n\n    // Optionally, limit the array to a certain size (e.g., 25 elements)\n    if (context.rssiArray.length > 25) {\n        context.rssiArray.shift();\n    }\n} else {\n    // Handle the case where the payload is not a number\n    node.warn(\"Received a non-numeric value for RSSI: \" + newRSSI);\n}\n\n// Calculate the mean and standard deviation of the last 25 RSSI values\nvar rssiData = context.rssiArray;\nvar mean = 0;\nvar stdDev = 0;\n\n// Check if the array length is at least 25 before calculating\nif (rssiData.length >= 25) {\n    // Get the last 25 elements from the array\n    var last25Data = rssiData.slice(-25);\n\n    mean = last25Data.reduce((a, b) => a + b, 0) / last25Data.length;\n    stdDev = Math.sqrt(last25Data.reduce((a, b) => a + Math.pow(b - mean, 2), 0) / (last25Data.length - 1));\n\n    mean = mean.toFixed(3);\n    stdDev = stdDev.toFixed(3);\n}\nelse\n{\n    var last25Data = rssiData;\n\n    mean = last25Data.reduce((a, b) => a + b, 0) / last25Data.length;\n    stdDev = Math.sqrt(last25Data.reduce((a, b) => a + Math.pow(b - mean, 2), 0) / (last25Data.length - 1));\n\n    mean = mean.toFixed(3);\n    stdDev = stdDev.toFixed(3);\n\n}\n\n// Store the updated array and statistics in context\ncontext.set('rssiArray', rssiData);\ncontext.set('meanRSSI', mean);\ncontext.set('stdDevRSSI', stdDev);\n\n// Prepare an output message if at least 25 data points are available\nmsg.payload = {\n        MeanRSSI: mean,\n        StdDevRSSI: stdDev\n    };\n\n/*\nif (rssiData.length >= 25) {\n    msg.payload = {\n        MeanRSSI: mean,\n        StdDevRSSI: stdDev\n    };\n} else {\n    msg.payload = \"Accumilating data\";\n}\n*/\n\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 880,
+        "y": 420,
+        "wires": [
+            [
+                "26f44c35413cc06f",
+                "5c65c6741efe03ad"
+            ]
+        ]
+    },
+    {
+        "id": "26f44c35413cc06f",
+        "type": "function",
+        "z": "a50c419ae1813cc9",
+        "name": "Mean",
+        "func": "msg.payload = msg.payload.MeanRSSI;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1110,
+        "y": 380,
+        "wires": [
+            [
+                "9e45782925ee50cd"
+            ]
+        ]
+    },
+    {
+        "id": "5c65c6741efe03ad",
+        "type": "function",
+        "z": "a50c419ae1813cc9",
+        "name": "StdDev",
+        "func": "msg.payload = msg.payload.StdDevRSSI;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1120,
+        "y": 420,
+        "wires": [
+            [
+                "ead1817a1df2b425"
+            ]
+        ]
+    },
+    {
+        "id": "9e45782925ee50cd",
+        "type": "ui_text",
+        "z": "a50c419ae1813cc9",
+        "group": "9cddc915a23ce783",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "Mean",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "className": "",
+        "style": true,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 1290,
+        "y": 380,
+        "wires": []
+    },
+    {
+        "id": "ead1817a1df2b425",
+        "type": "ui_text",
+        "z": "a50c419ae1813cc9",
+        "group": "9cddc915a23ce783",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "Standard deviation",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 1330,
+        "y": 420,
+        "wires": []
+    },
+    {
+        "id": "ed0d3e220ee84e0f",
+        "type": "function",
+        "z": "a50c419ae1813cc9",
+        "name": "Mean and Deviation",
+        "func": "// Initialize an array to store RSSI values\nif (!context.rssiArray) {\n    context.rssiArray = [];\n}\n\n// Extract the RSSI value from the incoming message\nvar newRSSI = msg.payload; // Assuming the RSSI value is in the message payload\n\n// Check if the incoming payload is a number (RSSI value)\nif (typeof newRSSI === 'number') {\n    // Add the RSSI value to the array\n    context.rssiArray.push(newRSSI);\n\n    // Optionally, limit the array to a certain size (e.g., 25 elements)\n    if (context.rssiArray.length > 25) {\n        context.rssiArray.shift();\n    }\n} else {\n    // Handle the case where the payload is not a number\n    node.warn(\"Received a non-numeric value for RSSI: \" + newRSSI);\n}\n\n// Calculate the mean and standard deviation of the last 25 RSSI values\nvar rssiData = context.rssiArray;\nvar mean = 0;\nvar stdDev = 0;\n\n// Check if the array length is at least 25 before calculating\nif (rssiData.length >= 25) {\n    // Get the last 25 elements from the array\n    var last25Data = rssiData.slice(-25);\n\n    mean = last25Data.reduce((a, b) => a + b, 0) / last25Data.length;\n    stdDev = Math.sqrt(last25Data.reduce((a, b) => a + Math.pow(b - mean, 2), 0) / (last25Data.length - 1));\n\n    mean = mean.toFixed(3);\n    stdDev = stdDev.toFixed(3);\n}\nelse\n{\n    var last25Data = rssiData;\n\n    mean = last25Data.reduce((a, b) => a + b, 0) / last25Data.length;\n    stdDev = Math.sqrt(last25Data.reduce((a, b) => a + Math.pow(b - mean, 2), 0) / (last25Data.length - 1));\n\n    mean = mean.toFixed(3);\n    stdDev = stdDev.toFixed(3);\n\n}\n\n// Store the updated array and statistics in context\ncontext.set('rssiArray', rssiData);\ncontext.set('meanRSSI', mean);\ncontext.set('stdDevRSSI', stdDev);\n\n// Prepare an output message if at least 25 data points are available\nmsg.payload = {\n        MeanRSSI: mean,\n        StdDevRSSI: stdDev\n    };\n\n/*\nif (rssiData.length >= 25) {\n    msg.payload = {\n        MeanRSSI: mean,\n        StdDevRSSI: stdDev\n    };\n} else {\n    msg.payload = \"Accumilating data\";\n}\n*/\n\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 880,
+        "y": 320,
+        "wires": [
+            [
+                "84025b5d79caf6b0",
+                "cdc7725dbc8a16b2"
+            ]
+        ]
+    },
+    {
+        "id": "84025b5d79caf6b0",
+        "type": "function",
+        "z": "a50c419ae1813cc9",
+        "name": "Mean",
+        "func": "msg.payload = msg.payload.MeanRSSI;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1110,
+        "y": 280,
+        "wires": [
+            [
+                "3160a977684e9dbe"
+            ]
+        ]
+    },
+    {
+        "id": "cdc7725dbc8a16b2",
+        "type": "function",
+        "z": "a50c419ae1813cc9",
+        "name": "StdDev",
+        "func": "msg.payload = msg.payload.StdDevRSSI;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1120,
+        "y": 320,
+        "wires": [
+            [
+                "cc1a0fc0c582202d"
+            ]
+        ]
+    },
+    {
+        "id": "3160a977684e9dbe",
+        "type": "ui_text",
+        "z": "a50c419ae1813cc9",
+        "group": "994e89622af130dd",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "Mean",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "className": "",
+        "style": true,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 1290,
+        "y": 280,
+        "wires": []
+    },
+    {
+        "id": "cc1a0fc0c582202d",
+        "type": "ui_text",
+        "z": "a50c419ae1813cc9",
+        "group": "994e89622af130dd",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "Standard deviation",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 1330,
+        "y": 320,
+        "wires": []
+    },
+    {
+        "id": "d37e72fcd8668070",
+        "type": "function",
+        "z": "a50c419ae1813cc9",
+        "name": "Mean and Deviation",
+        "func": "// Initialize an array to store RSSI values\nif (!context.rssiArray) {\n    context.rssiArray = [];\n}\n\n// Extract the RSSI value from the incoming message\nvar newRSSI = msg.payload; // Assuming the RSSI value is in the message payload\n\n// Check if the incoming payload is a number (RSSI value)\nif (typeof newRSSI === 'number') {\n    // Add the RSSI value to the array\n    context.rssiArray.push(newRSSI);\n\n    // Optionally, limit the array to a certain size (e.g., 25 elements)\n    if (context.rssiArray.length > 25) {\n        context.rssiArray.shift();\n    }\n} else {\n    // Handle the case where the payload is not a number\n    node.warn(\"Received a non-numeric value for RSSI: \" + newRSSI);\n}\n\n// Calculate the mean and standard deviation of the last 25 RSSI values\nvar rssiData = context.rssiArray;\nvar mean = 0;\nvar stdDev = 0;\n\n// Check if the array length is at least 25 before calculating\nif (rssiData.length >= 25) {\n    // Get the last 25 elements from the array\n    var last25Data = rssiData.slice(-25);\n\n    mean = last25Data.reduce((a, b) => a + b, 0) / last25Data.length;\n    stdDev = Math.sqrt(last25Data.reduce((a, b) => a + Math.pow(b - mean, 2), 0) / (last25Data.length - 1));\n\n    mean = mean.toFixed(3);\n    stdDev = stdDev.toFixed(3);\n}\nelse\n{\n    var last25Data = rssiData;\n\n    mean = last25Data.reduce((a, b) => a + b, 0) / last25Data.length;\n    stdDev = Math.sqrt(last25Data.reduce((a, b) => a + Math.pow(b - mean, 2), 0) / (last25Data.length - 1));\n\n    mean = mean.toFixed(3);\n    stdDev = stdDev.toFixed(3);\n\n}\n\n// Store the updated array and statistics in context\ncontext.set('rssiArray', rssiData);\ncontext.set('meanRSSI', mean);\ncontext.set('stdDevRSSI', stdDev);\n\n// Prepare an output message if at least 25 data points are available\nmsg.payload = {\n        MeanRSSI: mean,\n        StdDevRSSI: stdDev\n    };\n\n/*\nif (rssiData.length >= 25) {\n    msg.payload = {\n        MeanRSSI: mean,\n        StdDevRSSI: stdDev\n    };\n} else {\n    msg.payload = \"Accumilating data\";\n}\n*/\n\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 880,
+        "y": 520,
+        "wires": [
+            [
+                "cf41bacf22e28f0f",
+                "f81230e9e20d2968"
+            ]
+        ]
+    },
+    {
+        "id": "cf41bacf22e28f0f",
+        "type": "function",
+        "z": "a50c419ae1813cc9",
+        "name": "Mean",
+        "func": "msg.payload = msg.payload.MeanRSSI;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1110,
+        "y": 480,
+        "wires": [
+            [
+                "77713fc63d891c97"
+            ]
+        ]
+    },
+    {
+        "id": "f81230e9e20d2968",
+        "type": "function",
+        "z": "a50c419ae1813cc9",
+        "name": "StdDev",
+        "func": "msg.payload = msg.payload.StdDevRSSI;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1120,
+        "y": 520,
+        "wires": [
+            [
+                "5d924ce4b87cbf6f"
+            ]
+        ]
+    },
+    {
+        "id": "77713fc63d891c97",
+        "type": "ui_text",
+        "z": "a50c419ae1813cc9",
+        "group": "6a8ea8923d2c335d",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "Mean",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "className": "",
+        "style": true,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 1290,
+        "y": 480,
+        "wires": []
+    },
+    {
+        "id": "5d924ce4b87cbf6f",
+        "type": "ui_text",
+        "z": "a50c419ae1813cc9",
+        "group": "6a8ea8923d2c335d",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "Standard deviation",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 1330,
+        "y": 520,
+        "wires": []
+    },
+    {
+        "id": "b13b11c0ed8ef6ed",
+        "type": "function",
+        "z": "a50c419ae1813cc9",
+        "name": "Mean and Deviation",
+        "func": "// Initialize an array to store RSSI values\nif (!context.rssiArray) {\n    context.rssiArray = [];\n}\n\n// Extract the RSSI value from the incoming message\nvar newRSSI = msg.payload; // Assuming the RSSI value is in the message payload\n\n// Check if the incoming payload is a number (RSSI value)\nif (typeof newRSSI === 'number') {\n    // Add the RSSI value to the array\n    context.rssiArray.push(newRSSI);\n\n    // Optionally, limit the array to a certain size (e.g., 25 elements)\n    if (context.rssiArray.length > 25) {\n        context.rssiArray.shift();\n    }\n} else {\n    // Handle the case where the payload is not a number\n    node.warn(\"Received a non-numeric value for RSSI: \" + newRSSI);\n}\n\n// Calculate the mean and standard deviation of the last 25 RSSI values\nvar rssiData = context.rssiArray;\nvar mean = 0;\nvar stdDev = 0;\n\n// Check if the array length is at least 25 before calculating\nif (rssiData.length >= 25) {\n    // Get the last 25 elements from the array\n    var last25Data = rssiData.slice(-25);\n\n    mean = last25Data.reduce((a, b) => a + b, 0) / last25Data.length;\n    stdDev = Math.sqrt(last25Data.reduce((a, b) => a + Math.pow(b - mean, 2), 0) / (last25Data.length - 1));\n\n    mean = mean.toFixed(3);\n    stdDev = stdDev.toFixed(3);\n}\nelse\n{\n    var last25Data = rssiData;\n\n    mean = last25Data.reduce((a, b) => a + b, 0) / last25Data.length;\n    stdDev = Math.sqrt(last25Data.reduce((a, b) => a + Math.pow(b - mean, 2), 0) / (last25Data.length - 1));\n\n    mean = mean.toFixed(3);\n    stdDev = stdDev.toFixed(3);\n\n}\n\n// Store the updated array and statistics in context\ncontext.set('rssiArray', rssiData);\ncontext.set('meanRSSI', mean);\ncontext.set('stdDevRSSI', stdDev);\n\n// Prepare an output message if at least 25 data points are available\nmsg.payload = {\n        MeanRSSI: mean,\n        StdDevRSSI: stdDev\n    };\n\n/*\nif (rssiData.length >= 25) {\n    msg.payload = {\n        MeanRSSI: mean,\n        StdDevRSSI: stdDev\n    };\n} else {\n    msg.payload = \"Accumilating data\";\n}\n*/\n\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 880,
+        "y": 620,
+        "wires": [
+            [
+                "beec331864f3d321",
+                "a48a19635fa1c210"
+            ]
+        ]
+    },
+    {
+        "id": "beec331864f3d321",
+        "type": "function",
+        "z": "a50c419ae1813cc9",
+        "name": "Mean",
+        "func": "msg.payload = msg.payload.MeanRSSI;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1110,
+        "y": 580,
+        "wires": [
+            [
+                "e7e2f74115f1c71e"
+            ]
+        ]
+    },
+    {
+        "id": "a48a19635fa1c210",
+        "type": "function",
+        "z": "a50c419ae1813cc9",
+        "name": "StdDev",
+        "func": "msg.payload = msg.payload.StdDevRSSI;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1120,
+        "y": 620,
+        "wires": [
+            [
+                "f56134cbc0be4639"
+            ]
+        ]
+    },
+    {
+        "id": "e7e2f74115f1c71e",
+        "type": "ui_text",
+        "z": "a50c419ae1813cc9",
+        "group": "ec83320aa4768ff7",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "Mean",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "className": "",
+        "style": true,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 1290,
+        "y": 580,
+        "wires": []
+    },
+    {
+        "id": "f56134cbc0be4639",
+        "type": "ui_text",
+        "z": "a50c419ae1813cc9",
+        "group": "ec83320aa4768ff7",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "Standard deviation",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 1330,
+        "y": 620,
+        "wires": []
+    },
+    {
+        "id": "58dd606c77729dc3",
+        "type": "function",
+        "z": "a50c419ae1813cc9",
+        "name": "Mean and Deviation",
+        "func": "// Initialize an array to store RSSI values\nif (!context.rssiArray) {\n    context.rssiArray = [];\n}\n\n// Extract the RSSI value from the incoming message\nvar newRSSI = msg.payload; // Assuming the RSSI value is in the message payload\n\n// Check if the incoming payload is a number (RSSI value)\nif (typeof newRSSI === 'number') {\n    // Add the RSSI value to the array\n    context.rssiArray.push(newRSSI);\n\n    // Optionally, limit the array to a certain size (e.g., 25 elements)\n    if (context.rssiArray.length > 25) {\n        context.rssiArray.shift();\n    }\n} else {\n    // Handle the case where the payload is not a number\n    node.warn(\"Received a non-numeric value for RSSI: \" + newRSSI);\n}\n\n// Calculate the mean and standard deviation of the last 25 RSSI values\nvar rssiData = context.rssiArray;\nvar mean = 0;\nvar stdDev = 0;\n\n// Check if the array length is at least 25 before calculating\nif (rssiData.length >= 25) {\n    // Get the last 25 elements from the array\n    var last25Data = rssiData.slice(-25);\n\n    mean = last25Data.reduce((a, b) => a + b, 0) / last25Data.length;\n    stdDev = Math.sqrt(last25Data.reduce((a, b) => a + Math.pow(b - mean, 2), 0) / (last25Data.length - 1));\n\n    mean = mean.toFixed(3);\n    stdDev = stdDev.toFixed(3);\n}\nelse\n{\n    var last25Data = rssiData;\n\n    mean = last25Data.reduce((a, b) => a + b, 0) / last25Data.length;\n    stdDev = Math.sqrt(last25Data.reduce((a, b) => a + Math.pow(b - mean, 2), 0) / (last25Data.length - 1));\n\n    mean = mean.toFixed(3);\n    stdDev = stdDev.toFixed(3);\n\n}\n\n// Store the updated array and statistics in context\ncontext.set('rssiArray', rssiData);\ncontext.set('meanRSSI', mean);\ncontext.set('stdDevRSSI', stdDev);\n\n// Prepare an output message if at least 25 data points are available\nmsg.payload = {\n        MeanRSSI: mean,\n        StdDevRSSI: stdDev\n    };\n\n/*\nif (rssiData.length >= 25) {\n    msg.payload = {\n        MeanRSSI: mean,\n        StdDevRSSI: stdDev\n    };\n} else {\n    msg.payload = \"Accumilating data\";\n}\n*/\n\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 880,
+        "y": 720,
+        "wires": [
+            [
+                "11c6c174dc528941",
+                "7c2f0f4c630c0399"
+            ]
+        ]
+    },
+    {
+        "id": "11c6c174dc528941",
+        "type": "function",
+        "z": "a50c419ae1813cc9",
+        "name": "Mean",
+        "func": "msg.payload = msg.payload.MeanRSSI;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1110,
+        "y": 680,
+        "wires": [
+            [
+                "12480747ce77f01d"
+            ]
+        ]
+    },
+    {
+        "id": "7c2f0f4c630c0399",
+        "type": "function",
+        "z": "a50c419ae1813cc9",
+        "name": "StdDev",
+        "func": "msg.payload = msg.payload.StdDevRSSI;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1120,
+        "y": 720,
+        "wires": [
+            [
+                "633c77b18e786773"
+            ]
+        ]
+    },
+    {
+        "id": "12480747ce77f01d",
+        "type": "ui_text",
+        "z": "a50c419ae1813cc9",
+        "group": "facdf7e97c43035b",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "Mean",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "className": "",
+        "style": true,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 1290,
+        "y": 680,
+        "wires": []
+    },
+    {
+        "id": "633c77b18e786773",
+        "type": "ui_text",
+        "z": "a50c419ae1813cc9",
+        "group": "facdf7e97c43035b",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "Standard deviation",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 1330,
+        "y": 720,
+        "wires": []
+    },
+    {
+        "id": "50706b369b9f5e4e",
+        "type": "function",
+        "z": "a50c419ae1813cc9",
+        "name": "Mean and Deviation",
+        "func": "// Initialize an array to store RSSI values\nif (!context.rssiArray) {\n    context.rssiArray = [];\n}\n\n// Extract the RSSI value from the incoming message\nvar newRSSI = msg.payload; // Assuming the RSSI value is in the message payload\n\n// Check if the incoming payload is a number (RSSI value)\nif (typeof newRSSI === 'number') {\n    // Add the RSSI value to the array\n    context.rssiArray.push(newRSSI);\n\n    // Optionally, limit the array to a certain size (e.g., 25 elements)\n    if (context.rssiArray.length > 25) {\n        context.rssiArray.shift();\n    }\n} else {\n    // Handle the case where the payload is not a number\n    node.warn(\"Received a non-numeric value for RSSI: \" + newRSSI);\n}\n\n// Calculate the mean and standard deviation of the last 25 RSSI values\nvar rssiData = context.rssiArray;\nvar mean = 0;\nvar stdDev = 0;\n\n// Check if the array length is at least 25 before calculating\nif (rssiData.length >= 25) {\n    // Get the last 25 elements from the array\n    var last25Data = rssiData.slice(-25);\n\n    mean = last25Data.reduce((a, b) => a + b, 0) / last25Data.length;\n    stdDev = Math.sqrt(last25Data.reduce((a, b) => a + Math.pow(b - mean, 2), 0) / (last25Data.length - 1));\n\n    mean = mean.toFixed(3);\n    stdDev = stdDev.toFixed(3);\n}\nelse\n{\n    var last25Data = rssiData;\n\n    mean = last25Data.reduce((a, b) => a + b, 0) / last25Data.length;\n    stdDev = Math.sqrt(last25Data.reduce((a, b) => a + Math.pow(b - mean, 2), 0) / (last25Data.length - 1));\n\n    mean = mean.toFixed(3);\n    stdDev = stdDev.toFixed(3);\n\n}\n\n// Store the updated array and statistics in context\ncontext.set('rssiArray', rssiData);\ncontext.set('meanRSSI', mean);\ncontext.set('stdDevRSSI', stdDev);\n\n// Prepare an output message if at least 25 data points are available\nmsg.payload = {\n        MeanRSSI: mean,\n        StdDevRSSI: stdDev\n    };\n\n/*\nif (rssiData.length >= 25) {\n    msg.payload = {\n        MeanRSSI: mean,\n        StdDevRSSI: stdDev\n    };\n} else {\n    msg.payload = \"Accumilating data\";\n}\n*/\n\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 880,
+        "y": 820,
+        "wires": [
+            [
+                "c7dbfc2663dcc769",
+                "7907de8bc3d28f2e"
+            ]
+        ]
+    },
+    {
+        "id": "c7dbfc2663dcc769",
+        "type": "function",
+        "z": "a50c419ae1813cc9",
+        "name": "Mean",
+        "func": "msg.payload = msg.payload.MeanRSSI;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1110,
+        "y": 780,
+        "wires": [
+            [
+                "190c2604dedeb0aa"
+            ]
+        ]
+    },
+    {
+        "id": "7907de8bc3d28f2e",
+        "type": "function",
+        "z": "a50c419ae1813cc9",
+        "name": "StdDev",
+        "func": "msg.payload = msg.payload.StdDevRSSI;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1120,
+        "y": 820,
+        "wires": [
+            [
+                "7ffd8bbf3987e5a3"
+            ]
+        ]
+    },
+    {
+        "id": "190c2604dedeb0aa",
+        "type": "ui_text",
+        "z": "a50c419ae1813cc9",
+        "group": "42bc1ff0acad5150",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "Mean",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "className": "",
+        "style": true,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 1290,
+        "y": 780,
+        "wires": []
+    },
+    {
+        "id": "7ffd8bbf3987e5a3",
+        "type": "ui_text",
+        "z": "a50c419ae1813cc9",
+        "group": "42bc1ff0acad5150",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "Standard deviation",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 1330,
+        "y": 820,
+        "wires": []
+    },
+    {
+        "id": "6bf4ab1cfe416d5b",
+        "type": "function",
+        "z": "a50c419ae1813cc9",
+        "name": "Mean and Deviation",
+        "func": "// Initialize an array to store RSSI values\nif (!context.rssiArray) {\n    context.rssiArray = [];\n}\n\n// Extract the RSSI value from the incoming message\nvar newRSSI = msg.payload; // Assuming the RSSI value is in the message payload\n\n// Check if the incoming payload is a number (RSSI value)\nif (typeof newRSSI === 'number') {\n    // Add the RSSI value to the array\n    context.rssiArray.push(newRSSI);\n\n    // Optionally, limit the array to a certain size (e.g., 25 elements)\n    if (context.rssiArray.length > 25) {\n        context.rssiArray.shift();\n    }\n} else {\n    // Handle the case where the payload is not a number\n    node.warn(\"Received a non-numeric value for RSSI: \" + newRSSI);\n}\n\n// Calculate the mean and standard deviation of the last 25 RSSI values\nvar rssiData = context.rssiArray;\nvar mean = 0;\nvar stdDev = 0;\n\n// Check if the array length is at least 25 before calculating\nif (rssiData.length >= 25) {\n    // Get the last 25 elements from the array\n    var last25Data = rssiData.slice(-25);\n\n    mean = last25Data.reduce((a, b) => a + b, 0) / last25Data.length;\n    stdDev = Math.sqrt(last25Data.reduce((a, b) => a + Math.pow(b - mean, 2), 0) / (last25Data.length - 1));\n\n    mean = mean.toFixed(3);\n    stdDev = stdDev.toFixed(3);\n}\nelse\n{\n    var last25Data = rssiData;\n\n    mean = last25Data.reduce((a, b) => a + b, 0) / last25Data.length;\n    stdDev = Math.sqrt(last25Data.reduce((a, b) => a + Math.pow(b - mean, 2), 0) / (last25Data.length - 1));\n\n    mean = mean.toFixed(3);\n    stdDev = stdDev.toFixed(3);\n\n}\n\n// Store the updated array and statistics in context\ncontext.set('rssiArray', rssiData);\ncontext.set('meanRSSI', mean);\ncontext.set('stdDevRSSI', stdDev);\n\n// Prepare an output message if at least 25 data points are available\nmsg.payload = {\n        MeanRSSI: mean,\n        StdDevRSSI: stdDev\n    };\n\n/*\nif (rssiData.length >= 25) {\n    msg.payload = {\n        MeanRSSI: mean,\n        StdDevRSSI: stdDev\n    };\n} else {\n    msg.payload = \"Accumilating data\";\n}\n*/\n\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 880,
+        "y": 940,
+        "wires": [
+            [
+                "4254991c0ecddbe9",
+                "71a9e646e5efd484"
+            ]
+        ]
+    },
+    {
+        "id": "4254991c0ecddbe9",
+        "type": "function",
+        "z": "a50c419ae1813cc9",
+        "name": "Mean",
+        "func": "msg.payload = msg.payload.MeanRSSI;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1110,
+        "y": 900,
+        "wires": [
+            [
+                "e0a92548c4610494"
+            ]
+        ]
+    },
+    {
+        "id": "71a9e646e5efd484",
+        "type": "function",
+        "z": "a50c419ae1813cc9",
+        "name": "StdDev",
+        "func": "msg.payload = msg.payload.StdDevRSSI;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1120,
+        "y": 940,
+        "wires": [
+            [
+                "7ee2c46d1df2af53"
+            ]
+        ]
+    },
+    {
+        "id": "e0a92548c4610494",
+        "type": "ui_text",
+        "z": "a50c419ae1813cc9",
+        "group": "1ce281a51cc946bc",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "Mean",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "className": "",
+        "style": true,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 1290,
+        "y": 900,
+        "wires": []
+    },
+    {
+        "id": "7ee2c46d1df2af53",
+        "type": "ui_text",
+        "z": "a50c419ae1813cc9",
+        "group": "1ce281a51cc946bc",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "Standard deviation",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 1330,
+        "y": 940,
+        "wires": []
+    },
+    {
+        "id": "35fb04a05a8a1dde",
+        "type": "function",
+        "z": "a50c419ae1813cc9",
+        "name": "Mean and Deviation",
+        "func": "// Initialize an array to store RSSI values\nif (!context.rssiArray) {\n    context.rssiArray = [];\n}\n\n// Extract the RSSI value from the incoming message\nvar newRSSI = msg.payload; // Assuming the RSSI value is in the message payload\n\n// Check if the incoming payload is a number (RSSI value)\nif (typeof newRSSI === 'number') {\n    // Add the RSSI value to the array\n    context.rssiArray.push(newRSSI);\n\n    // Optionally, limit the array to a certain size (e.g., 25 elements)\n    if (context.rssiArray.length > 25) {\n        context.rssiArray.shift();\n    }\n} else {\n    // Handle the case where the payload is not a number\n    node.warn(\"Received a non-numeric value for RSSI: \" + newRSSI);\n}\n\n// Calculate the mean and standard deviation of the last 25 RSSI values\nvar rssiData = context.rssiArray;\nvar mean = 0;\nvar stdDev = 0;\n\n// Check if the array length is at least 25 before calculating\nif (rssiData.length >= 25) {\n    // Get the last 25 elements from the array\n    var last25Data = rssiData.slice(-25);\n\n    mean = last25Data.reduce((a, b) => a + b, 0) / last25Data.length;\n    stdDev = Math.sqrt(last25Data.reduce((a, b) => a + Math.pow(b - mean, 2), 0) / (last25Data.length - 1));\n\n    mean = mean.toFixed(3);\n    stdDev = stdDev.toFixed(3);\n}\nelse\n{\n    var last25Data = rssiData;\n\n    mean = last25Data.reduce((a, b) => a + b, 0) / last25Data.length;\n    stdDev = Math.sqrt(last25Data.reduce((a, b) => a + Math.pow(b - mean, 2), 0) / (last25Data.length - 1));\n\n    mean = mean.toFixed(3);\n    stdDev = stdDev.toFixed(3);\n\n}\n\n// Store the updated array and statistics in context\ncontext.set('rssiArray', rssiData);\ncontext.set('meanRSSI', mean);\ncontext.set('stdDevRSSI', stdDev);\n\n// Prepare an output message if at least 25 data points are available\nmsg.payload = {\n        MeanRSSI: mean,\n        StdDevRSSI: stdDev\n    };\n\n/*\nif (rssiData.length >= 25) {\n    msg.payload = {\n        MeanRSSI: mean,\n        StdDevRSSI: stdDev\n    };\n} else {\n    msg.payload = \"Accumilating data\";\n}\n*/\n\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 880,
+        "y": 1060,
+        "wires": [
+            [
+                "901c872c388f59f4",
+                "081bb4c6840743bd"
+            ]
+        ]
+    },
+    {
+        "id": "901c872c388f59f4",
+        "type": "function",
+        "z": "a50c419ae1813cc9",
+        "name": "Mean",
+        "func": "msg.payload = msg.payload.MeanRSSI;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1110,
+        "y": 1020,
+        "wires": [
+            [
+                "10bfcc48d4cfca26"
+            ]
+        ]
+    },
+    {
+        "id": "081bb4c6840743bd",
+        "type": "function",
+        "z": "a50c419ae1813cc9",
+        "name": "StdDev",
+        "func": "msg.payload = msg.payload.StdDevRSSI;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1120,
+        "y": 1060,
+        "wires": [
+            [
+                "f95ebec3fb181e45"
+            ]
+        ]
+    },
+    {
+        "id": "10bfcc48d4cfca26",
+        "type": "ui_text",
+        "z": "a50c419ae1813cc9",
+        "group": "665848bb812d18ed",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "Mean",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "className": "",
+        "style": true,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 1290,
+        "y": 1020,
+        "wires": []
+    },
+    {
+        "id": "f95ebec3fb181e45",
+        "type": "ui_text",
+        "z": "a50c419ae1813cc9",
+        "group": "665848bb812d18ed",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "Standard deviation",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 1330,
+        "y": 1060,
+        "wires": []
+    },
+    {
+        "id": "12f80e8d98f61f14",
+        "type": "function",
+        "z": "a50c419ae1813cc9",
+        "name": "Mean and Deviation",
+        "func": "// Initialize an array to store RSSI values\nif (!context.rssiArray) {\n    context.rssiArray = [];\n}\n\n// Extract the RSSI value from the incoming message\nvar newRSSI = msg.payload; // Assuming the RSSI value is in the message payload\n\n// Check if the incoming payload is a number (RSSI value)\nif (typeof newRSSI === 'number') {\n    // Add the RSSI value to the array\n    context.rssiArray.push(newRSSI);\n\n    // Optionally, limit the array to a certain size (e.g., 25 elements)\n    if (context.rssiArray.length > 25) {\n        context.rssiArray.shift();\n    }\n} else {\n    // Handle the case where the payload is not a number\n    node.warn(\"Received a non-numeric value for RSSI: \" + newRSSI);\n}\n\n// Calculate the mean and standard deviation of the last 25 RSSI values\nvar rssiData = context.rssiArray;\nvar mean = 0;\nvar stdDev = 0;\n\n// Check if the array length is at least 25 before calculating\nif (rssiData.length >= 25) {\n    // Get the last 25 elements from the array\n    var last25Data = rssiData.slice(-25);\n\n    mean = last25Data.reduce((a, b) => a + b, 0) / last25Data.length;\n    stdDev = Math.sqrt(last25Data.reduce((a, b) => a + Math.pow(b - mean, 2), 0) / (last25Data.length - 1));\n\n    mean = mean.toFixed(3);\n    stdDev = stdDev.toFixed(3);\n}\nelse\n{\n    var last25Data = rssiData;\n\n    mean = last25Data.reduce((a, b) => a + b, 0) / last25Data.length;\n    stdDev = Math.sqrt(last25Data.reduce((a, b) => a + Math.pow(b - mean, 2), 0) / (last25Data.length - 1));\n\n    mean = mean.toFixed(3);\n    stdDev = stdDev.toFixed(3);\n\n}\n\n// Store the updated array and statistics in context\ncontext.set('rssiArray', rssiData);\ncontext.set('meanRSSI', mean);\ncontext.set('stdDevRSSI', stdDev);\n\n// Prepare an output message if at least 25 data points are available\nmsg.payload = {\n        MeanRSSI: mean,\n        StdDevRSSI: stdDev\n    };\n\n/*\nif (rssiData.length >= 25) {\n    msg.payload = {\n        MeanRSSI: mean,\n        StdDevRSSI: stdDev\n    };\n} else {\n    msg.payload = \"Accumilating data\";\n}\n*/\n\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 880,
+        "y": 1180,
+        "wires": [
+            [
+                "52243dda4d31125b",
+                "e0d3def37b159bef"
+            ]
+        ]
+    },
+    {
+        "id": "52243dda4d31125b",
+        "type": "function",
+        "z": "a50c419ae1813cc9",
+        "name": "Mean",
+        "func": "msg.payload = msg.payload.MeanRSSI;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1110,
+        "y": 1140,
+        "wires": [
+            [
+                "13d1f684715bae84"
+            ]
+        ]
+    },
+    {
+        "id": "e0d3def37b159bef",
+        "type": "function",
+        "z": "a50c419ae1813cc9",
+        "name": "StdDev",
+        "func": "msg.payload = msg.payload.StdDevRSSI;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1120,
+        "y": 1180,
+        "wires": [
+            [
+                "5b5025a541925d71"
+            ]
+        ]
+    },
+    {
+        "id": "13d1f684715bae84",
+        "type": "ui_text",
+        "z": "a50c419ae1813cc9",
+        "group": "072d9702dd68f8a1",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "Mean",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "className": "",
+        "style": true,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 1290,
+        "y": 1140,
+        "wires": []
+    },
+    {
+        "id": "5b5025a541925d71",
+        "type": "ui_text",
+        "z": "a50c419ae1813cc9",
+        "group": "072d9702dd68f8a1",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "Standard deviation",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 1330,
+        "y": 1180,
+        "wires": []
+    },
+    {
+        "id": "76a315ddf65312b1",
+        "type": "ui_spacer",
+        "z": "a50c419ae1813cc9",
+        "name": "spacer",
+        "group": "4c126785955eb5a8",
+        "order": 1,
+        "width": 10,
+        "height": 1
+    },
+    {
+        "id": "2642e63acf1cc11a",
+        "type": "ui_spacer",
+        "z": "a50c419ae1813cc9",
+        "name": "spacer",
+        "group": "4c126785955eb5a8",
+        "order": 5,
+        "width": 1,
+        "height": 1
+    },
+    {
+        "id": "683a81a82f60256b",
+        "type": "ui_spacer",
+        "z": "a50c419ae1813cc9",
+        "name": "spacer",
+        "group": "4c126785955eb5a8",
+        "order": 7,
+        "width": 8,
+        "height": 1
+    },
+    {
+        "id": "ebfdd1a85de7e072",
+        "type": "ui_spacer",
+        "z": "a50c419ae1813cc9",
+        "name": "spacer",
+        "group": "4c126785955eb5a8",
+        "order": 8,
+        "width": 26,
+        "height": 1
+    },
+    {
+        "id": "c7552a192170ea21",
+        "type": "ui_spacer",
+        "z": "a50c419ae1813cc9",
+        "name": "spacer",
+        "group": "4c126785955eb5a8",
+        "order": 9,
+        "width": 3,
+        "height": 1
+    },
+    {
+        "id": "afebd6e34b81ae93",
+        "type": "ui_spacer",
+        "z": "a50c419ae1813cc9",
+        "name": "spacer",
+        "group": "4c126785955eb5a8",
+        "order": 12,
+        "width": 4,
+        "height": 1
+    },
+    {
+        "id": "96f5c49cbbb71640",
+        "type": "ui_spacer",
+        "z": "a50c419ae1813cc9",
+        "name": "spacer",
+        "group": "4c126785955eb5a8",
+        "order": 15,
+        "width": 3,
+        "height": 1
+    },
+    {
+        "id": "30ec6be97571c187",
+        "type": "ui_spacer",
+        "z": "a50c419ae1813cc9",
+        "name": "spacer",
+        "group": "4c126785955eb5a8",
+        "order": 16,
+        "width": 3,
+        "height": 1
+    },
+    {
+        "id": "8b46ac261ee25cad",
+        "type": "ui_spacer",
+        "z": "a50c419ae1813cc9",
+        "name": "spacer",
+        "group": "4c126785955eb5a8",
+        "order": 17,
+        "width": 4,
+        "height": 1
+    },
+    {
+        "id": "7dfad99fe5a4d5c0",
+        "type": "ui_spacer",
+        "z": "a50c419ae1813cc9",
+        "name": "spacer",
+        "group": "4c126785955eb5a8",
+        "order": 18,
+        "width": 3,
+        "height": 1
+    },
+    {
+        "id": "24fd6ffa2f2339a1",
+        "type": "ui_spacer",
+        "z": "a50c419ae1813cc9",
+        "name": "spacer",
+        "group": "",
+        "order": 3,
+        "width": 1,
+        "height": 1
+    },
+    {
+        "id": "e8d2e4367f2e0d0d",
+        "type": "ui_spacer",
+        "z": "a50c419ae1813cc9",
+        "name": "spacer",
+        "group": "",
+        "order": 4,
+        "width": 11,
+        "height": 1
+    },
+    {
+        "id": "4c971facdc8efda0",
+        "type": "ui_spacer",
+        "z": "a50c419ae1813cc9",
+        "name": "spacer",
+        "group": "",
+        "order": 6,
+        "width": 1,
+        "height": 1
+    },
+    {
+        "id": "4debd7f8125c8cc1",
+        "type": "ui_spacer",
+        "z": "a50c419ae1813cc9",
+        "name": "spacer",
+        "group": "",
+        "order": 7,
+        "width": 11,
+        "height": 1
+    },
+    {
+        "id": "bdbefb594e2e0f06",
+        "type": "ui_spacer",
+        "z": "a50c419ae1813cc9",
+        "name": "spacer",
+        "group": "",
+        "order": 9,
+        "width": 1,
+        "height": 1
+    },
+    {
+        "id": "fecd43ba42a63ea1",
+        "type": "ui_spacer",
+        "z": "a50c419ae1813cc9",
+        "name": "spacer",
+        "group": "",
+        "order": 10,
+        "width": 11,
+        "height": 1
+    },
+    {
+        "id": "4ac2d9506f7b07dc",
+        "type": "ui_spacer",
+        "z": "a50c419ae1813cc9",
+        "name": "spacer",
+        "group": "",
+        "order": 12,
+        "width": 1,
+        "height": 1
+    },
+    {
+        "id": "0c7ea3525d59087c",
+        "type": "ui_spacer",
+        "z": "a50c419ae1813cc9",
+        "name": "spacer",
+        "group": "",
+        "order": 13,
+        "width": 11,
+        "height": 1
+    },
+    {
+        "id": "f2fab5a14b4e96d1",
+        "type": "ui_spacer",
+        "z": "a50c419ae1813cc9",
+        "name": "spacer",
+        "group": "",
+        "order": 15,
+        "width": 1,
+        "height": 1
+    },
+    {
+        "id": "62a99e7487e08acb",
+        "type": "ui_spacer",
+        "z": "a50c419ae1813cc9",
+        "name": "spacer",
+        "group": "",
+        "order": 16,
+        "width": 11,
+        "height": 1
+    },
+    {
+        "id": "21046b3281666cb2",
+        "type": "ui_spacer",
+        "z": "a50c419ae1813cc9",
+        "name": "spacer",
+        "group": "",
+        "order": 18,
+        "width": 1,
+        "height": 1
+    },
+    {
+        "id": "940ecb10addc3510",
+        "type": "ui_spacer",
+        "z": "a50c419ae1813cc9",
+        "name": "spacer",
+        "group": "",
+        "order": 19,
+        "width": 11,
+        "height": 1
+    },
+    {
+        "id": "ee830a495b3426e7",
+        "type": "ui_spacer",
+        "z": "a50c419ae1813cc9",
+        "name": "spacer",
+        "group": "",
+        "order": 21,
+        "width": 11,
+        "height": 1
+    },
+    {
+        "id": "447a047bbf5c246e",
+        "type": "ui_spacer",
+        "z": "a50c419ae1813cc9",
+        "name": "spacer",
+        "group": "",
+        "order": 22,
+        "width": 22,
+        "height": 1
+    },
+    {
+        "id": "8f6cde93c83ce803",
+        "type": "ui_spacer",
+        "z": "a50c419ae1813cc9",
+        "name": "spacer",
+        "group": "",
+        "order": 24,
+        "width": 11,
+        "height": 1
+    },
+    {
+        "id": "99d45b4947d49183",
+        "type": "mqtt-broker",
+        "name": "",
+        "broker": "broker.hivemq.com",
+        "port": "1883",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "autoUnsubscribe": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "e08c9e5e227fe4f4",
+        "type": "ui_group",
+        "name": "Networks observed",
+        "tab": "70b96ce1b1f0e9bd",
+        "order": 2,
+        "disp": true,
+        "width": 10,
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "9cddc915a23ce783",
+        "type": "ui_group",
+        "name": "Pixel_6a",
+        "tab": "70b96ce1b1f0e9bd",
+        "order": 3,
+        "disp": true,
+        "width": "6",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "994e89622af130dd",
+        "type": "ui_group",
+        "name": "UoM_wireless0",
+        "tab": "70b96ce1b1f0e9bd",
+        "order": 4,
+        "disp": true,
+        "width": "6",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "6a8ea8923d2c335d",
+        "type": "ui_group",
+        "name": "eduroam0",
+        "tab": "70b96ce1b1f0e9bd",
+        "order": 5,
+        "disp": true,
+        "width": "6",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "ec83320aa4768ff7",
+        "type": "ui_group",
+        "name": "Dialog_UoM_Lab2",
+        "tab": "70b96ce1b1f0e9bd",
+        "order": 6,
+        "disp": true,
+        "width": "6",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "facdf7e97c43035b",
+        "type": "ui_group",
+        "name": "edurom1",
+        "tab": "70b96ce1b1f0e9bd",
+        "order": 7,
+        "disp": true,
+        "width": "6",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "42bc1ff0acad5150",
+        "type": "ui_group",
+        "name": "edurom2",
+        "tab": "70b96ce1b1f0e9bd",
+        "order": 8,
+        "disp": true,
+        "width": "6",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "1ce281a51cc946bc",
+        "type": "ui_group",
+        "name": "UoM_wireless1",
+        "tab": "70b96ce1b1f0e9bd",
+        "order": 9,
+        "disp": true,
+        "width": "6",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "665848bb812d18ed",
+        "type": "ui_group",
+        "name": "UoM_wireless2",
+        "tab": "70b96ce1b1f0e9bd",
+        "order": 10,
+        "disp": true,
+        "width": "6",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "072d9702dd68f8a1",
+        "type": "ui_group",
+        "name": "A6+",
+        "tab": "70b96ce1b1f0e9bd",
+        "order": 11,
+        "disp": true,
+        "width": "6",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "4c126785955eb5a8",
+        "type": "ui_group",
+        "name": "LED WITH NODE MCU",
+        "tab": "",
+        "order": 4,
+        "disp": true,
+        "width": "26",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "70b96ce1b1f0e9bd",
+        "type": "ui_tab",
+        "name": "Network",
+        "icon": "dashboard",
+        "order": 1,
+        "disabled": false,
+        "hidden": false
+    }
+]
