@@ -83,6 +83,7 @@ void mqttCallback(char *topic, byte *payload, unsigned int length) {
     String POT = String(POT_);
     String LDR = String(LDR_);
 
+/*
     if ((POT == "Low" && LDR == "Low") || (POT == "Low" && LDR == "Medium") || (POT == "Medium" && LDR == "Low")) {
       while (millis() - readTime < PERIOD) {
         Serial.print(".");
@@ -110,7 +111,7 @@ void mqttCallback(char *topic, byte *payload, unsigned int length) {
         digitalWrite(GREEN, HIGH);
         digitalWrite(YELLOW, HIGH);
       }
-    }
+    } */
   }
 }
 
