@@ -15,6 +15,7 @@ StaticJsonDocument<200> sensor_out;
 String data_out;
 
 #define PERIOD 5000
+unsigned long sendTime;
 
 const char *SSID = "gevidu";                     // SSID of your WiFi
 const char *PASSWORD = "123456789";              //"206fde266242";       // Password of your WiFi
@@ -83,23 +84,16 @@ void mqttLoop() {
 }
 
 void sendValues() {
-  if (millis() - potTime > PERIOD) {
-    int potValue = analogRead(POT_PIN);
-    int ldrValue = analogRead(LDR_PIN);
+  if (millis() - sendTime > PERIOD) {
 
-    sensor_out["POT"] = potRange(potValue);
-    sensor_out["LDR"] = ldrRange(ldrValue);
+    sensor_out["Voltage"] = String(U);
+    sensor_out["Current"] = String(I);
 
     serializeJson(sensor_out, data_out);
 
     //mqttClient.publish(POTTopic, (String(potValue) + " - " + String(ldrValue)).c_str());
     mqttClient.publish(POTTopic, data_out.c_str());
-    potTime = millis();
-    Serial.print("POT: ");
-    Serial.print(potValue);
-    Serial.print(" - ");
-    Serial.print("LDR: ");
-    Serial.println(ldrValue);
+    sendTime = millis();
     Serial.println(data_out);
 
     sensor_out.clear();
@@ -111,6 +105,7 @@ void setup() {
   Serial.begin(115200);
 
   mqttInit();
+  sendTime = millis();
 
   delay(100);
   voltageSensor.setSensitivity(0.0025);
@@ -141,7 +136,6 @@ void loop() {
     U = 0;
     CulmPwh = 0;
   }
-
 
   I = currentSensor.getCurrentAC();
   dt = micros() - lastSample;
