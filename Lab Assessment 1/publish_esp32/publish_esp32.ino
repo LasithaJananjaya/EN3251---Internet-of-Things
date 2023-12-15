@@ -11,12 +11,12 @@ String data_out;
 
 #define PERIOD 5000
 
-const char *SSID = "gevidu";               // SSID of your WiFi
-const char *PASSWORD = "123456789"; //"206fde266242";       // Password of your WiFi
+const char *SSID = "gevidu";                     // SSID of your WiFi
+const char *PASSWORD = "123456789";              //"206fde266242";       // Password of your WiFi
 const char *mqqttBroker = "test.mosquitto.org";  // alternate hosts: test.mosquitto.or, broker.hivemq.com
 const int mqttPort = 1883;
-const char *mqttClientID = "200650U";  // CHANGE THIS acording to your group number
-const char *POTTopic = "protocolpros";          // Topic for potentiometer (publish)
+const char *mqttClientID = "200650U";   // CHANGE THIS acording to your group number
+const char *POTTopic = "protocolpros";  // Topic for potentiometer (publish)
 
 WiFiClient espClient;
 PubSubClient mqttClient(espClient);

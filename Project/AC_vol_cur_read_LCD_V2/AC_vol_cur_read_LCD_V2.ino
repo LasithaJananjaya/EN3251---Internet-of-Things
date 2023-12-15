@@ -53,9 +53,64 @@ float lastSample = 0;
 unsigned long lasttime = 0;
 long ScreenSelect = 0;
 
+void mqttInit() {
+  mqttClient.setServer(mqqttBroker, mqttPort);
+  WiFi.begin(SSID, PASSWORD);
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+    Serial.print(".");
+  }
+  Serial.println("");
+  Serial.print("Connected to ");
+  Serial.println(SSID);
+  Serial.print("IP address: ");
+  Serial.println(WiFi.localIP());
+}
+
+void mqttLoop() {
+  while (!mqttClient.connected()) {
+    Serial.print("Attempting MQTT connection...");
+    if (mqttClient.connect(mqttClientID)) {
+      Serial.println("connected");
+    } else {
+      Serial.print("failed, rc=");
+      Serial.print(mqttClient.state());
+      Serial.println(" try again in 5 seconds");
+      delay(5000);
+    }
+  }
+  mqttClient.loop();
+}
+
+void sendValues() {
+  if (millis() - potTime > PERIOD) {
+    int potValue = analogRead(POT_PIN);
+    int ldrValue = analogRead(LDR_PIN);
+
+    sensor_out["POT"] = potRange(potValue);
+    sensor_out["LDR"] = ldrRange(ldrValue);
+
+    serializeJson(sensor_out, data_out);
+
+    //mqttClient.publish(POTTopic, (String(potValue) + " - " + String(ldrValue)).c_str());
+    mqttClient.publish(POTTopic, data_out.c_str());
+    potTime = millis();
+    Serial.print("POT: ");
+    Serial.print(potValue);
+    Serial.print(" - ");
+    Serial.print("LDR: ");
+    Serial.println(ldrValue);
+    Serial.println(data_out);
+
+    sensor_out.clear();
+    data_out = "";
+  }
+}
 
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(115200);
+
+  mqttInit();
 
   delay(100);
   voltageSensor.setSensitivity(0.0025);
@@ -120,6 +175,10 @@ void loop() {
     }  //Units
   }
   lastSample = micros();
+
+  //sending the values
+  mqttLoop();
+  sendValues();
 }
 
 
