@@ -17,12 +17,12 @@ String data_out;
 #define PERIOD 5000
 unsigned long sendTime;
 
-const char *SSID = "gevidu";                     // SSID of your WiFi
-const char *PASSWORD = "123456789";              //"206fde266242";       // Password of your WiFi
-const char *mqqttBroker = "test.mosquitto.org";  // alternate hosts: test.mosquitto.or, broker.hivemq.com
+const char *SSID = "gevidu";               // SSID of your WiFi
+const char *PASSWORD = "123456789";        //"206fde266242";       // Password of your WiFi
+const char *mqqttBroker = "31.220.81.30";  //"test.mosquitto.org"; alternate hosts: test.mosquitto.or, broker.hivemq.com
 const int mqttPort = 1883;
-const char *mqttClientID = "200650U";   // CHANGE THIS acording to your group number
-const char *POTTopic = "protocolpros";  // Topic for potentiometer (publish)
+const char *mqttClientID = "ProtocolPros_1";  // CHANGE THIS acording to your group number
+const char *POTTopic = "Protocol_pros";       // Topic for potentiometer (publish)
 
 WiFiClient espClient;
 PubSubClient mqttClient(espClient);
@@ -71,7 +71,7 @@ void mqttInit() {
 void mqttLoop() {
   while (!mqttClient.connected()) {
     Serial.print("Attempting MQTT connection...");
-    if (mqttClient.connect(mqttClientID)) {
+    if (mqttClient.connect(mqttClientID, "smartplug_tx", "protocolpros_tx")) {
       Serial.println("connected");
     } else {
       Serial.print("failed, rc=");
@@ -127,6 +127,7 @@ void setup() {
   //CalibCurrent();
   //CalibVoltage();
 }
+
 
 void loop() {
 

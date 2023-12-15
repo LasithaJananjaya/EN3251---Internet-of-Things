@@ -16,13 +16,15 @@ String data_out;
 
 #define PERIOD 5000
 unsigned long sendTime;
+unsigned long readTime;
 
-const char *SSID = "gevidu";                     // SSID of your WiFi
-const char *PASSWORD = "123456789";              //"206fde266242";       // Password of your WiFi
-const char *mqqttBroker = "test.mosquitto.org";  // alternate hosts: test.mosquitto.or, broker.hivemq.com
+const char *SSID = "gevidu";               // SSID of your WiFi
+const char *PASSWORD = "123456789";        //"206fde266242";       // Password of your WiFi
+const char *mqqttBroker = "31.220.81.30";  //"test.mosquitto.org"; alternate hosts: test.mosquitto.or, broker.hivemq.com
 const int mqttPort = 1883;
-const char *mqttClientID = "200650U";   // CHANGE THIS acording to your group number
-const char *POTTopic = "protocolpros";  // Topic for potentiometer (publish)
+const char *mqttClientID = "ProtocolPros_1";  // CHANGE THIS acording to your group number
+const char *pubTopic = "Protocol_pros";       // Topic for publish
+const char *subTopic = "protocolpros";     // Topic for subscribe
 
 WiFiClient espClient;
 PubSubClient mqttClient(espClient);
@@ -54,8 +56,67 @@ float lastSample = 0;
 unsigned long lasttime = 0;
 long ScreenSelect = 0;
 
+void mqttCallback(char *topic, byte *payload, unsigned int length) {
+  char payloadCharArr[length];
+
+  for (int i = 0; i < (int)length; i++) {
+    payloadCharArr[i] = (char)payload[i];
+  }
+  String payloadStr = String(payloadCharArr).substring(0, length);
+
+  if (strcmp(topic, subTopic) == 0) {
+    // You can use the payloadStr to do something
+    Serial.println(payloadStr);
+
+    DynamicJsonDocument doc(1024);
+    deserializeJson(doc, payloadStr);
+
+
+    const char *POT_ = doc["POT"];
+    Serial.print(POT_);
+    Serial.print(" - ");
+    const char *LDR_ = doc["LDR"];
+    Serial.println(LDR_);
+
+    readTime = millis();
+
+    String POT = String(POT_);
+    String LDR = String(LDR_);
+
+    if ((POT == "Low" && LDR == "Low") || (POT == "Low" && LDR == "Medium") || (POT == "Medium" && LDR == "Low")) {
+      while (millis() - readTime < PERIOD) {
+        Serial.print(".");
+        digitalWrite(RED, HIGH);
+        digitalWrite(GREEN, HIGH);
+        digitalWrite(YELLOW, HIGH);
+        delay(100);
+        digitalWrite(RED, LOW);
+        digitalWrite(GREEN, LOW);
+        digitalWrite(YELLOW, LOW);
+        delay(100);
+      }
+    } else if (((LDR == "Medium") && (POT == "Medium")) || ((LDR == "High") && (POT == "Low")) || ((LDR == "Low") && (POT == "High"))) {
+      while (millis() - readTime < PERIOD) {
+        Serial.print(".");
+        digitalWrite(RED, LOW);
+        digitalWrite(GREEN, HIGH);
+        digitalWrite(YELLOW, HIGH);
+      }
+
+    } else if (((LDR == "High") && (POT == "Medium")) || ((LDR == "Medium") && (POT == "High")) || ((LDR == "High") && (POT == "High"))) {
+      while (millis() - readTime < PERIOD) {
+        Serial.print(".");
+        digitalWrite(RED, HIGH);
+        digitalWrite(GREEN, HIGH);
+        digitalWrite(YELLOW, HIGH);
+      }
+    }
+  }
+}
+
 void mqttInit() {
   mqttClient.setServer(mqqttBroker, mqttPort);
+  mqttClient.setCallback(mqttCallback);
   WiFi.begin(SSID, PASSWORD);
   while (WiFi.status() != WL_CONNECTED) {
     delay(500);
@@ -71,8 +132,10 @@ void mqttInit() {
 void mqttLoop() {
   while (!mqttClient.connected()) {
     Serial.print("Attempting MQTT connection...");
-    if (mqttClient.connect(mqttClientID)) {
+    if (mqttClient.connect(mqttClientID, "smartplug_tx", "protocolpros_tx")) {
       Serial.println("connected");
+      mqttClient.subscribe(subTopic);  // Subscribe to subTopic
+      Serial.println("MQTT subscribed");
     } else {
       Serial.print("failed, rc=");
       Serial.print(mqttClient.state());
@@ -91,8 +154,7 @@ void sendValues() {
 
     serializeJson(sensor_out, data_out);
 
-    //mqttClient.publish(POTTopic, (String(potValue) + " - " + String(ldrValue)).c_str());
-    mqttClient.publish(POTTopic, data_out.c_str());
+    mqttClient.publish(pubTopic, data_out.c_str());
     sendTime = millis();
     Serial.println(data_out);
 
@@ -127,6 +189,7 @@ void setup() {
   //CalibCurrent();
   //CalibVoltage();
 }
+
 
 void loop() {
 
