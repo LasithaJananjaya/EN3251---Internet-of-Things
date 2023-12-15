@@ -18,13 +18,15 @@ String data_out;
 unsigned long sendTime;
 unsigned long readTime;
 
+#define RELAY 37
+
 const char *SSID = "gevidu";               // SSID of your WiFi
 const char *PASSWORD = "123456789";        //"206fde266242";       // Password of your WiFi
 const char *mqqttBroker = "31.220.81.30";  //"test.mosquitto.org"; alternate hosts: test.mosquitto.or, broker.hivemq.com
 const int mqttPort = 1883;
 const char *mqttClientID = "ProtocolPros_1";  // CHANGE THIS acording to your group number
 const char *pubTopic = "Protocol_pros";       // Topic for publish
-const char *subTopic = "protocolpros";     // Topic for subscribe
+const char *subTopic = "protocolpros";        // Topic for subscribe
 
 WiFiClient espClient;
 PubSubClient mqttClient(espClient);
@@ -72,46 +74,26 @@ void mqttCallback(char *topic, byte *payload, unsigned int length) {
     deserializeJson(doc, payloadStr);
 
 
-    const char *POT_ = doc["POT"];
-    Serial.print(POT_);
+    const char *Volatage_ = doc["Voltage"];
+    Serial.print(Volatage_);
     Serial.print(" - ");
-    const char *LDR_ = doc["LDR"];
-    Serial.println(LDR_);
+    const char *Current_ = doc["Current"];
+    Serial.println(Current_);
+    Serial.print(" - ");
+    const char *Status_ = doc["Status"];
+    Serial.println(Status_);
 
     readTime = millis();
 
-    String POT = String(POT_);
-    String LDR = String(LDR_);
+    String Voltage = String(Volatage_);
+    String Current = String(Current_);
+    String Status = String(Status_);  //we don't really need this - we can directly use status as boolean and use the if case from that
 
-/*
-    if ((POT == "Low" && LDR == "Low") || (POT == "Low" && LDR == "Medium") || (POT == "Medium" && LDR == "Low")) {
-      while (millis() - readTime < PERIOD) {
-        Serial.print(".");
-        digitalWrite(RED, HIGH);
-        digitalWrite(GREEN, HIGH);
-        digitalWrite(YELLOW, HIGH);
-        delay(100);
-        digitalWrite(RED, LOW);
-        digitalWrite(GREEN, LOW);
-        digitalWrite(YELLOW, LOW);
-        delay(100);
-      }
-    } else if (((LDR == "Medium") && (POT == "Medium")) || ((LDR == "High") && (POT == "Low")) || ((LDR == "Low") && (POT == "High"))) {
-      while (millis() - readTime < PERIOD) {
-        Serial.print(".");
-        digitalWrite(RED, LOW);
-        digitalWrite(GREEN, HIGH);
-        digitalWrite(YELLOW, HIGH);
-      }
-
-    } else if (((LDR == "High") && (POT == "Medium")) || ((LDR == "Medium") && (POT == "High")) || ((LDR == "High") && (POT == "High"))) {
-      while (millis() - readTime < PERIOD) {
-        Serial.print(".");
-        digitalWrite(RED, HIGH);
-        digitalWrite(GREEN, HIGH);
-        digitalWrite(YELLOW, HIGH);
-      }
-    } */
+    if (Status == "ON") {
+      digitalWrite(RELAY, HIGH);
+    } else {
+      digitalWrite(RELAY, LOW);
+    }
   }
 }
 
@@ -166,6 +148,7 @@ void sendValues() {
 
 void setup() {
   Serial.begin(115200);
+  pinMode(RELAY, OUTPUT);
 
   mqttInit();
   sendTime = millis();
