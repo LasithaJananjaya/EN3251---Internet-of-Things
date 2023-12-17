@@ -16,7 +16,7 @@ String data_out;
 
 #define PERIOD 5000
 unsigned long sendTime;
-unsigned long readTime;
+//unsigned long readTime;
 
 #define RELAY 37
 
@@ -26,7 +26,7 @@ const char *mqqttBroker = "31.220.81.30";  //"test.mosquitto.org"; alternate hos
 const int mqttPort = 1883;
 const char *mqttClientID = "ProtocolPros_1";  // CHANGE THIS acording to your group number
 const char *pubTopic = "Protocol_pros";       // Topic for publish
-const char *subTopic = "protocolpros";        // Topic for subscribe
+const char *subTopic = "Protocol_pros";       // Topic for subscribe
 
 WiFiClient espClient;
 PubSubClient mqttClient(espClient);
@@ -68,28 +68,20 @@ void mqttCallback(char *topic, byte *payload, unsigned int length) {
 
   if (strcmp(topic, subTopic) == 0) {
     // You can use the payloadStr to do something
+    Serial.print("Received payload: ");
     Serial.println(payloadStr);
 
     DynamicJsonDocument doc(1024);
     deserializeJson(doc, payloadStr);
 
+    const char *status_ = doc["status"];
+    Serial.println(status_);
 
-    const char *Volatage_ = doc["Voltage"];
-    Serial.print(Volatage_);
-    Serial.print(" - ");
-    const char *Current_ = doc["Current"];
-    Serial.println(Current_);
-    Serial.print(" - ");
-    const char *Status_ = doc["Status"];
-    Serial.println(Status_);
+    //readTime = millis();
 
-    readTime = millis();
+    String status = String(status_);  //we don't really need this - we can directly use status as boolean and use the if case from that
 
-    String Voltage = String(Volatage_);
-    String Current = String(Current_);
-    String Status = String(Status_);  //we don't really need this - we can directly use status as boolean and use the if case from that
-
-    if (Status == "ON") {
+    if (status == "false") {
       digitalWrite(RELAY, HIGH);
     } else {
       digitalWrite(RELAY, LOW);
@@ -115,7 +107,7 @@ void mqttInit() {
 void mqttLoop() {
   while (!mqttClient.connected()) {
     Serial.print("Attempting MQTT connection...");
-    if (mqttClient.connect(mqttClientID, "smartplug_tx", "protocolpros_tx")) {
+    if (mqttClient.connect(mqttClientID,"smartplug_tx", "protocolpros_tx")) {
       Serial.println("connected");
       mqttClient.subscribe(subTopic);  // Subscribe to subTopic
       Serial.println("MQTT subscribed");
@@ -132,8 +124,9 @@ void mqttLoop() {
 void sendValues() {
   if (millis() - sendTime > PERIOD) {
 
-    sensor_out["Voltage"] = String(U);
-    sensor_out["Current"] = String(I);
+    sensor_out["voltage"] = U;
+    sensor_out["current"] = I;
+    sensor_out["power"] = P;
 
     serializeJson(sensor_out, data_out);
 
