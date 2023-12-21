@@ -16,17 +16,16 @@ String data_out;
 
 #define PERIOD 5000
 unsigned long sendTime;
-//unsigned long readTime;
 
-#define RELAY 37
+#define RELAY 2
 
-const char *SSID = "gevidu";               // SSID of your WiFi
-const char *PASSWORD = "123456789";        //"206fde266242";       // Password of your WiFi
-const char *mqqttBroker = "31.220.81.30";  //"test.mosquitto.org"; alternate hosts: test.mosquitto.or, broker.hivemq.com
+const char *SSID = "gevidu";         // Wifi SSID
+const char *PASSWORD = "123456789";  // Wifi Password
+const char *mqqttBroker = "31.220.81.30";
 const int mqttPort = 1883;
-const char *mqttClientID = "ProtocolPros_1";  // CHANGE THIS acording to your group number
-const char *pubTopic = "Protocol_pros";       // Topic for publish
-const char *subTopic = "Protocol_pros";       // Topic for subscribe
+const char *mqttClientID = "ProtocolPros_1";
+const char *pubTopic = "Protocol_pros";  // Topic for publish
+const char *subTopic = "Protocol_pros";  // Topic for subscribe
 
 WiFiClient espClient;
 PubSubClient mqttClient(espClient);
@@ -35,7 +34,7 @@ PubSubClient mqttClient(espClient);
 #define SCREEN_HEIGHT 64  // OLED display height, in pixels
 
 #define OLED_RESET -1        // Reset pin # (or -1 if sharing Arduino reset pin)
-#define SCREEN_ADDRESS 0x3C  ///< See datasheet for Address; 0x3D for 128x64, 0x3C for 128x32
+#define SCREEN_ADDRESS 0x3C  // See datasheet for Address; 0x3D for 128x64, 0x3C for 128x32
 Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
 
 ZMPT101B voltageSensor(35);
@@ -67,7 +66,6 @@ void mqttCallback(char *topic, byte *payload, unsigned int length) {
   String payloadStr = String(payloadCharArr).substring(0, length);
 
   if (strcmp(topic, subTopic) == 0) {
-    // You can use the payloadStr to do something
     Serial.print("Received payload: ");
     Serial.println(payloadStr);
 
@@ -77,12 +75,11 @@ void mqttCallback(char *topic, byte *payload, unsigned int length) {
     const char *status_ = doc["status"];
     Serial.println(status_);
 
-    //readTime = millis();
-
-    String status = String(status_);  //we don't really need this - we can directly use status as boolean and use the if case from that
+    String status = String(status_);
 
     if (status == "false") {
       digitalWrite(RELAY, HIGH);
+      Serial.println(status);
     } else {
       digitalWrite(RELAY, LOW);
     }
@@ -107,9 +104,9 @@ void mqttInit() {
 void mqttLoop() {
   while (!mqttClient.connected()) {
     Serial.print("Attempting MQTT connection...");
-    if (mqttClient.connect(mqttClientID,"smartplug_tx", "protocolpros_tx")) {
+    if (mqttClient.connect(mqttClientID, "smartplug_tx", "protocolpros_tx")) {
       Serial.println("connected");
-      mqttClient.subscribe(subTopic);  // Subscribe to subTopic
+      mqttClient.subscribe(subTopic);
       Serial.println("MQTT subscribed");
     } else {
       Serial.print("failed, rc=");
@@ -162,9 +159,6 @@ void setup() {
   // Clear the buffer
   display.clearDisplay();
   display.display();
-
-  //CalibCurrent();
-  //CalibVoltage();
 }
 
 
@@ -213,7 +207,6 @@ void loop() {
   mqttLoop();
   sendValues();
 }
-
 
 float getVPP() {
   float result;
